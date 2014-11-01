@@ -4,17 +4,19 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by juhani on 01/11/14.
  */
 public class SensorGraphView extends View {
 
-    private static final int MAX_DATA_SIZE = 200;
-
+    private static final int MAX_DATA_SIZE = 300;
+    private static final int CIRCLE_SIZE = 4;
 
     // FIXME don't hardcode 9
     private Paint[] rectPaints = new Paint[9];
@@ -61,7 +63,17 @@ public class SensorGraphView extends View {
         this.normalisedDataPoints = normalisedDataPoints;
 
 
-        //TODO remove extra points
+        for (int i = 0; i < this.normalisedDataPoints.length; ++i) {
+            if (this.normalisedDataPoints[i].size() > MAX_DATA_SIZE) {
+
+                List tmp = this.normalisedDataPoints[i].subList(this.normalisedDataPoints[i].size() - MAX_DATA_SIZE - 1, this.normalisedDataPoints[i].size() - 1);
+                this.normalisedDataPoints[i] = new LinkedList<Float>();
+                this.normalisedDataPoints[i].addAll(tmp);
+            }
+
+
+        }
+
         invalidate();
     }
 
@@ -108,10 +120,14 @@ public class SensorGraphView extends View {
             int currentX = 0;//width - pointSpan;
             for (Float dataPoint : this.normalisedDataPoints[i]) {
 
+
+
                 float y = height - (height * dataPoint);
 
 
-                canvas.drawCircle(currentX, y, 5, rectPaints[i]);
+
+
+                canvas.drawCircle(currentX, y, CIRCLE_SIZE, rectPaints[i]);
                 currentX += pointSpan;
 
             }

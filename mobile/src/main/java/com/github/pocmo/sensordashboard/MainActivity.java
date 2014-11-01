@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -65,6 +66,7 @@ public class MainActivity extends ActionBarActivity {
         super.onResume();
         BusProvider.getInstance().register(this);
 
+        Log.e("TMP", "onResume, RemoteSensorManager.getInstance(this).getSensors() "+ RemoteSensorManager.getInstance(this).getSensors().size());
         pager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager(), RemoteSensorManager.getInstance(this).getSensors()));
     }
 
@@ -100,6 +102,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Subscribe
     public void onNewSensorEvent(NewSensorEvent event) {
+        Log.e("TMP", "onNewSensorEvent");
         pager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager(), RemoteSensorManager.getInstance(this).getSensors()));
     }
 }

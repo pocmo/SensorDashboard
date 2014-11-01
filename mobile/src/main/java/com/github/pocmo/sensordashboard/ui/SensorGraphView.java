@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import java.util.LinkedList;
@@ -17,22 +16,43 @@ public class SensorGraphView extends View {
     private static final int MAX_DATA_SIZE = 200;
 
 
-    private Paint[] rectPaints = new Paint[3];
+    // FIXME don't hardcode 9
+    private Paint[] rectPaints = new Paint[9];
 
-    private LinkedList<Float>[] normalisedDataPoints = new LinkedList[3];
+    private LinkedList<Float>[] normalisedDataPoints;
 
 
     public SensorGraphView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         rectPaints[0] = new Paint();
-        rectPaints[0].setColor(0xFFFF0000);
+        rectPaints[0].setColor(0xFF3f51b5);
 
         rectPaints[1] = new Paint();
-        rectPaints[1].setColor(0xFFFFFF00);
+        rectPaints[1].setColor(0xFF9c27b0);
 
         rectPaints[2] = new Paint();
-        rectPaints[2].setColor(0xFFFF00FF);
+        rectPaints[2].setColor(0xFF009688);
+
+
+        rectPaints[3] = new Paint();
+        rectPaints[3].setColor(0xFF8bc34a);
+
+        rectPaints[4] = new Paint();
+        rectPaints[4].setColor(0xFFffc107);
+
+        rectPaints[5] = new Paint();
+        rectPaints[5].setColor(0xFF795548);
+
+
+        rectPaints[6] = new Paint();
+        rectPaints[6].setColor(0xFFe51c23);
+
+        rectPaints[7] = new Paint();
+        rectPaints[7].setColor(0xFFcddc39);
+
+        rectPaints[8] = new Paint();
+        rectPaints[8].setColor(0xFFff9800);
     }
 
 
@@ -51,7 +71,6 @@ public class SensorGraphView extends View {
             throw new ArrayIndexOutOfBoundsException("index too large!!");
         }
 
-        Log.e("TMP", "addNewDataPoint " + point + " in " + index);
         this.normalisedDataPoints[index].add(point);
 
         if (this.normalisedDataPoints[index].size() > MAX_DATA_SIZE) {
@@ -59,7 +78,6 @@ public class SensorGraphView extends View {
         }
 
 
-        Log.e("TMP", "points:  " + this.normalisedDataPoints[index].size());
         invalidate();
     }
 
@@ -71,8 +89,6 @@ public class SensorGraphView extends View {
             return;
         }
 
-
-        Log.e("TMP", "onDraw ");
 
         int height = canvas.getHeight();
         int width = canvas.getWidth();
@@ -98,8 +114,6 @@ public class SensorGraphView extends View {
                 canvas.drawCircle(currentX, y, 5, rectPaints[i]);
                 currentX += pointSpan;
 
-
-                Log.e("TMP", "drawing:  " + dataPoint + " to: " + currentX + " " + y);
             }
 
 

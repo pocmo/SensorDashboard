@@ -70,7 +70,7 @@ public class SensorFragment extends Fragment {
         sensor = RemoteSensorManager.getInstance(getActivity()).getSensor(sensorId);
         spread = sensor.getMaxValue() - sensor.getMinValue();
 
-        View view = inflater.inflate(R.layout.fragment_symbol, container, false);
+        View view = inflater.inflate(R.layout.fragment_sensor, container, false);
 
 
         ((TextView) view.findViewById(R.id.title)).setText(sensor.getName());

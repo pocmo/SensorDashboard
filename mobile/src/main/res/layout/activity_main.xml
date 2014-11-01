@@ -22,8 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        tools:context=".MainActivity"
-        tools:ignore="MergeRootFrame">
+        >
 
 
         <android.support.v4.view.ViewPager

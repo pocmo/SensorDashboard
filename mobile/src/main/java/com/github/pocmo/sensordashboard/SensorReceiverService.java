@@ -17,6 +17,15 @@ import java.util.Arrays;
 public class SensorReceiverService extends WearableListenerService {
     private static final String TAG = "SensorDashboard/SensorReceiverService";
 
+    private RemoteSensorManager sensorManager;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        sensorManager = RemoteSensorManager.getInstance(this);
+    }
+
     @Override
     public void onPeerConnected(Node peer) {
         super.onPeerConnected(peer);
@@ -55,5 +64,7 @@ public class SensorReceiverService extends WearableListenerService {
         Log.d(TAG, "Received sensor data " + sensorType + " = " + Arrays.toString(values));
 
         Toast.makeText(this, "Received sensor data " + sensorType + " = " + Arrays.toString(values), Toast.LENGTH_SHORT).show();
+
+        sensorManager.addSensorData(sensorType, accuracy, timestamp, values);
     }
 }

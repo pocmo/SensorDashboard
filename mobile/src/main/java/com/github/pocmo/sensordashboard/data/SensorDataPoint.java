@@ -1,24 +1,25 @@
 package com.github.pocmo.sensordashboard.data;
 
-/**
- * Created by juhani on 01/11/14.
- */
 public class SensorDataPoint {
-
     private long timestamp;
-    private float value;
+    private float[] values;
+    private int accuracy;
 
-
-    public SensorDataPoint(long timestamp, float value) {
+    public SensorDataPoint(long timestamp, int accuracy, float[] values) {
         this.timestamp = timestamp;
-        this.value = value;
+        this.accuracy = accuracy;
+        this.values = values;
     }
 
-    public float getValue() {
-        return value;
+    public float[] getValues() {
+        return values;
     }
 
     public long getTimestamp() {
         return timestamp;
+    }
+
+    public int getAccuracy() {
+        return accuracy;
     }
 }

@@ -84,6 +84,8 @@ public class SensorFragment extends Fragment {
     private void initialiseSensorData() {
         spread = sensor.getMaxValue() - sensor.getMinValue();
 
+        Log.e("TMP", "new spread " + spread + "sensor.getMaxValue() " + sensor.getMaxValue() + " sensor.getMinValue() "+ sensor.getMinValue());
+
         LinkedList<SensorDataPoint> dataPoints = sensor.getDataPoints();
 
         if (dataPoints == null || dataPoints.isEmpty()) {
@@ -103,7 +105,7 @@ public class SensorFragment extends Fragment {
         for (SensorDataPoint dataPoint : dataPoints) {
 
             for (int i = 0; i < dataPoint.getValues().length; ++i) {
-                float normalised = dataPoint.getValues()[i] / spread;
+                float normalised = (dataPoint.getValues()[i] - sensor.getMinValue()) / spread;
                 normalisedValues[i].add(normalised);
             }
         }
@@ -134,7 +136,12 @@ public class SensorFragment extends Fragment {
         if (event.getSensor().getId() == this.sensor.getId()) {
 
             for (int i = 0; i < event.getDataPoint().getValues().length; ++i) {
-                float normalised = event.getDataPoint().getValues()[i] / spread;
+                float normalised = (event.getDataPoint().getValues()[i] - sensor.getMinValue() ) / spread;
+
+
+
+                Log.e("TMP", "value "+ event.getDataPoint().getValues()[i] + " normalised " + normalised + "spread " + spread);
+                Log.e("TMP",  "sensor.getMaxValue() " + sensor.getMaxValue() + " sensor.getMinValue() "+ sensor.getMinValue());
                 this.sensorview.addNewDataPoint(normalised, i);
             }
         }

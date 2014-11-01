@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
-import java.util.HashMap;
 import java.util.Random;
 
 public class MainActivity extends Activity implements SensorEventListener {
@@ -62,15 +61,13 @@ public class MainActivity extends Activity implements SensorEventListener {
     private Sensor mStepCounterSensor;
     private Sensor mStepDetectorSensor;
 
-    private HashMap<Integer, Long> lastTimeStamps;
+    private long mLasttimestamp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-
-        lastTimeStamps = new HashMap<Integer, Long>();
 
         random = new Random();
         client = DeviceClient.getInstance(this);
@@ -233,13 +230,12 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        Long lastTimeStampForSensor = lastTimeStamps.get(event.sensor.getType());
 
-        if (lastTimeStampForSensor == null || (event.timestamp - lastTimeStampForSensor) > 100000000) {
+        if ((event.timestamp - mLasttimestamp) > 100000000) {
 
             client.sendSensorData(event.sensor.getType(), event.accuracy, event.timestamp, event.values);
 
-            lastTimeStamps.put(event.sensor.getType(), event.timestamp);
+            mLasttimestamp = event.timestamp;
         }
     }
 

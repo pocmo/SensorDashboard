@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.github.pocmo.sensordashboard.events.BusProvider;
 import com.github.pocmo.sensordashboard.events.SensorRangeEvent;
-import com.github.pocmo.sensordashboard.events.SensorUpdatedEvent;
 
 import java.util.LinkedList;
 
@@ -65,8 +64,6 @@ public class Sensor {
 
             BusProvider.postOnMainThread(new SensorRangeEvent(this));
         }
-
-        BusProvider.postOnMainThread(new SensorUpdatedEvent(this, dataPoint));
     }
 
     public long getId() {

@@ -63,8 +63,6 @@ public class SensorReceiverService extends WearableListenerService {
 
         Log.d(TAG, "Received sensor data " + sensorType + " = " + Arrays.toString(values));
 
-        Toast.makeText(this, "Received sensor data " + sensorType + " = " + Arrays.toString(values), Toast.LENGTH_SHORT).show();
-
         sensorManager.addSensorData(sensorType, accuracy, timestamp, values);
     }
 }

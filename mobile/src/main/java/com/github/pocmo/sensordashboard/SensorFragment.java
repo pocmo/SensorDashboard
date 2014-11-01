@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.pocmo.sensordashboard.data.DataController;
+
 import com.github.pocmo.sensordashboard.data.Sensor;
 import com.github.pocmo.sensordashboard.events.BusProvider;
 
@@ -59,8 +59,7 @@ public class SensorFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        sensor = DataController.getInstance(getActivity()).getSensor(sensorId);
-
+        sensor = RemoteSensorManager.getInstance(getActivity()).getSensor(sensorId);
         View view = inflater.inflate(R.layout.fragment_symbol, container, false);
 
 

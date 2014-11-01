@@ -9,10 +9,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.github.pocmo.sensordashboard.data.DataController;
 import com.github.pocmo.sensordashboard.data.Sensor;
+import com.squareup.otto.Subscribe;
 
-import java.util.LinkedList;
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -31,7 +31,7 @@ public class MainActivity extends ActionBarActivity {
 
         pager = (ViewPager) findViewById(R.id.pager);
 
-        pager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager(), DataController.getInstance(this).getSensors()));
+        pager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager(), RemoteSensorManager.getInstance(this).getSensors()));
 
     }
 
@@ -60,9 +60,9 @@ public class MainActivity extends ActionBarActivity {
 
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
-        private LinkedList<Sensor> sensors;
+        private List<Sensor> sensors;
 
-        public ScreenSlidePagerAdapter(FragmentManager fm, LinkedList<Sensor> symbols) {
+        public ScreenSlidePagerAdapter(FragmentManager fm, List<Sensor> symbols) {
             super(fm);
             this.sensors = symbols;
         }
@@ -82,4 +82,9 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+
+    @Subscribe
+    public void onNewSensorEvent() {
+        pager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager(), RemoteSensorManager.getInstance(this).getSensors()));
+    }
 }

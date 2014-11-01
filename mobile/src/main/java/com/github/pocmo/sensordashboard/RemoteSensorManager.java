@@ -18,7 +18,7 @@ public class RemoteSensorManager {
     private Context context;
     private Bus bus;
     private SparseArray<Sensor> sensorMapping;
-    private List<Sensor> sensors;
+    private ArrayList<Sensor> sensors;
 
     public static synchronized RemoteSensorManager getInstance(Context context) {
         if (instance == null) {
@@ -37,7 +37,16 @@ public class RemoteSensorManager {
     }
 
     public List<Sensor> getSensors() {
-        return sensors;
+        return (List<Sensor>) sensors.clone();
+    }
+
+    public Sensor getSensor(long id) {
+        for (Sensor sensor : this.sensors) {
+            if (sensor.getId() == id) {
+                return sensor;
+            }
+        }
+        return null;
     }
 
     private Sensor createSensor(int id) {

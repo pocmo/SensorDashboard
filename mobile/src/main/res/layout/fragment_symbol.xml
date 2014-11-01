@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFcccccc"
+
         android:orientation="vertical"
         >
 
@@ -23,6 +23,15 @@
             android:gravity="center"
             android:layout_gravity="center"
             />
+
+
+        <com.github.pocmo.sensordashboard.ui.SensorGraphView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="#FFdddddd"
+
+            />
+
 
     </LinearLayout>
 </ScrollView>

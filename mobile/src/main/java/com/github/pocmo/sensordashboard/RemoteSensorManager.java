@@ -7,6 +7,7 @@ import com.github.pocmo.sensordashboard.data.Sensor;
 import com.github.pocmo.sensordashboard.data.SensorDataPoint;
 import com.github.pocmo.sensordashboard.events.BusProvider;
 import com.github.pocmo.sensordashboard.events.NewSensorEvent;
+import com.github.pocmo.sensordashboard.events.SensorUpdatedEvent;
 import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
@@ -66,6 +67,10 @@ public class RemoteSensorManager {
         Sensor sensor = getOrCreateSensor(sensorType);
 
         // TODO: We probably want to pull sensor data point objects from a pool here
-        sensor.addDataPoint(new SensorDataPoint(timestamp, accuracy, values));
+        SensorDataPoint dataPoint = new SensorDataPoint(timestamp, accuracy, values);
+
+        sensor.addDataPoint(dataPoint);
+
+        BusProvider.postOnMainThread(new SensorUpdatedEvent(sensor, dataPoint));
     }
 }

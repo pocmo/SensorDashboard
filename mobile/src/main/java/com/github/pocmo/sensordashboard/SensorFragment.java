@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.github.pocmo.sensordashboard.data.Sensor;
 import com.github.pocmo.sensordashboard.data.SensorDataPoint;
 import com.github.pocmo.sensordashboard.events.BusProvider;
+import com.github.pocmo.sensordashboard.events.SensorRangeEvent;
 import com.github.pocmo.sensordashboard.events.SensorUpdatedEvent;
 import com.github.pocmo.sensordashboard.ui.SensorGraphView;
 import com.squareup.otto.Subscribe;
@@ -68,7 +69,7 @@ public class SensorFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         sensor = RemoteSensorManager.getInstance(getActivity()).getSensor(sensorId);
-        spread = sensor.getMaxValue() - sensor.getMinValue();
+
 
         View view = inflater.inflate(R.layout.fragment_sensor, container, false);
 
@@ -81,6 +82,8 @@ public class SensorFragment extends Fragment {
 
 
     private void initialiseSensorData() {
+        spread = sensor.getMaxValue() - sensor.getMinValue();
+
         LinkedList<SensorDataPoint> dataPoints = sensor.getDataPoints();
 
         if (dataPoints == null || dataPoints.isEmpty()) {
@@ -134,6 +137,14 @@ public class SensorFragment extends Fragment {
                 float normalised = event.getDataPoint().getValues()[i] / spread;
                 this.sensorview.addNewDataPoint(normalised, i);
             }
+        }
+    }
+
+
+    @Subscribe
+    public void onSensorRangeEvent(SensorRangeEvent event) {
+        if (event.getSensor().getId() == this.sensor.getId()) {
+            initialiseSensorData();
         }
     }
 

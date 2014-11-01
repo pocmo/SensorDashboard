@@ -35,11 +35,11 @@ public class Sensor {
         return minValue;
     }
 
-    public LinkedList<SensorDataPoint> getDataPoints() {
+    public synchronized LinkedList<SensorDataPoint> getDataPoints() {
         return (LinkedList<SensorDataPoint>) dataPoints.clone();
     }
 
-    public void addDataPoint(SensorDataPoint dataPoint) {
+    public synchronized void addDataPoint(SensorDataPoint dataPoint) {
         dataPoints.addLast(dataPoint);
 
         if (dataPoints.size() > MAX_DATA_POINTS) {

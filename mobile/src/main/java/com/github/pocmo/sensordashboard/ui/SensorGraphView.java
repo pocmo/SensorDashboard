@@ -28,33 +28,33 @@ public class SensorGraphView extends View {
         super(context, attrs);
 
         rectPaints[0] = new Paint();
-        rectPaints[0].setColor(0xFF3f51b5);
+        rectPaints[0].setColor(UIContstants.COLOUR_1);
 
         rectPaints[1] = new Paint();
-        rectPaints[1].setColor(0xFF9c27b0);
+        rectPaints[1].setColor(UIContstants.COLOUR_2);
 
         rectPaints[2] = new Paint();
-        rectPaints[2].setColor(0xFF009688);
+        rectPaints[2].setColor(UIContstants.COLOUR_3);
 
 
         rectPaints[3] = new Paint();
-        rectPaints[3].setColor(0xFF8bc34a);
+        rectPaints[3].setColor(UIContstants.COLOUR_4);
 
         rectPaints[4] = new Paint();
-        rectPaints[4].setColor(0xFFffc107);
+        rectPaints[4].setColor(UIContstants.COLOUR_5);
 
         rectPaints[5] = new Paint();
-        rectPaints[5].setColor(0xFF795548);
+        rectPaints[5].setColor(UIContstants.COLOUR_6);
 
 
         rectPaints[6] = new Paint();
-        rectPaints[6].setColor(0xFFe51c23);
+        rectPaints[6].setColor(UIContstants.COLOUR_7);
 
         rectPaints[7] = new Paint();
-        rectPaints[7].setColor(0xFFcddc39);
+        rectPaints[7].setColor(UIContstants.COLOUR_8);
 
         rectPaints[8] = new Paint();
-        rectPaints[8].setColor(0xFFff9800);
+        rectPaints[8].setColor(UIContstants.COLOUR_9);
     }
 
 

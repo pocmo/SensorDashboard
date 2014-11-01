@@ -16,6 +16,7 @@ import com.github.pocmo.sensordashboard.events.BusProvider;
 import com.github.pocmo.sensordashboard.events.SensorRangeEvent;
 import com.github.pocmo.sensordashboard.events.SensorUpdatedEvent;
 import com.github.pocmo.sensordashboard.ui.SensorGraphView;
+import com.github.pocmo.sensordashboard.ui.UIContstants;
 import com.squareup.otto.Subscribe;
 
 import java.util.LinkedList;
@@ -77,6 +78,12 @@ public class SensorFragment extends Fragment {
         ((TextView) view.findViewById(R.id.title)).setText(sensor.getName());
 
         sensorview = (SensorGraphView) view.findViewById(R.id.graph_view);
+
+
+        view.findViewById(R.id.legend1).setBackgroundColor(UIContstants.COLOUR_1);
+        view.findViewById(R.id.legend2).setBackgroundColor(UIContstants.COLOUR_2);
+        view.findViewById(R.id.legend3).setBackgroundColor(UIContstants.COLOUR_3);
+
         return view;
     }
 

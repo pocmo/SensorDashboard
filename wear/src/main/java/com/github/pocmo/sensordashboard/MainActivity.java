@@ -134,6 +134,12 @@ public class MainActivity extends Activity implements SensorEventListener {
                 Log.w(TAG, "No Gravity Sensor");
             }
 
+            if (mGyroscopeSensor != null) {
+                mSensorManager.registerListener(this, mGyroscopeSensor, SensorManager.SENSOR_DELAY_FASTEST);
+            } else {
+                Log.w(TAG, "No Gyroscope Sensor found");
+            }
+
             if (mGyroscopeUncalibratedSensor != null) {
                 mSensorManager.registerListener(this, mGyroscopeUncalibratedSensor, SensorManager.SENSOR_DELAY_FASTEST);
             } else {
@@ -144,6 +150,72 @@ public class MainActivity extends Activity implements SensorEventListener {
                 mSensorManager.registerListener(this, mHeartrateSensor, SensorManager.SENSOR_DELAY_FASTEST);
             } else {
                 Log.d(TAG, "No Heartrate Sensor found");
+            }
+
+            if (mLightSensor != null) {
+                mSensorManager.registerListener(this, mLightSensor, SensorManager.SENSOR_DELAY_FASTEST);
+            } else {
+                Log.d(TAG, "No Light Sensor found");
+            }
+
+            if (mLinearAccelerationSensor != null) {
+                mSensorManager.registerListener(this, mLinearAccelerationSensor, SensorManager.SENSOR_DELAY_FASTEST);
+            } else {
+                Log.d(TAG, "No Linear Acceleration Sensor found");
+            }
+
+            if (mMagneticFieldSensor != null) {
+                mSensorManager.registerListener(this, mMagneticFieldSensor, SensorManager.SENSOR_DELAY_FASTEST);
+            } else {
+                Log.d(TAG, "No Magnetic Field Sensor found");
+            }
+
+            if (mMagneticFieldUncalibratedSensor != null) {
+                mSensorManager.registerListener(this, mMagneticFieldUncalibratedSensor, SensorManager.SENSOR_DELAY_FASTEST);
+            } else {
+                Log.d(TAG, "No uncalibrated Magnetic Field Sensor found");
+            }
+
+            if (mPressureSensor != null) {
+                mSensorManager.registerListener(this, mPressureSensor, SensorManager.SENSOR_DELAY_FASTEST);
+            } else {
+                Log.d(TAG, "No Pressure Sensor found");
+            }
+
+            if (mProximitySensor != null) {
+                mSensorManager.registerListener(this, mProximitySensor, SensorManager.SENSOR_DELAY_FASTEST);
+            } else {
+                Log.d(TAG, "No Proximity Sensor found");
+            }
+
+            if (mHumiditySensor != null) {
+                mSensorManager.registerListener(this, mHumiditySensor, SensorManager.SENSOR_DELAY_FASTEST);
+            } else {
+                Log.d(TAG, "No Humidity Sensor found");
+            }
+
+            if (mRotationVectorSensor != null) {
+                mSensorManager.registerListener(this, mRotationVectorSensor, SensorManager.SENSOR_DELAY_FASTEST);
+            } else {
+                Log.d(TAG, "No Rotation Vector Sensor found");
+            }
+
+            if (mSignificantMotionSensor != null) {
+                mSensorManager.registerListener(this, mSignificantMotionSensor, SensorManager.SENSOR_DELAY_FASTEST);
+            } else {
+                Log.d(TAG, "No Significant Motion Sensor found");
+            }
+
+            if (mStepCounterSensor != null) {
+                mSensorManager.registerListener(this, mStepCounterSensor, SensorManager.SENSOR_DELAY_FASTEST);
+            } else {
+                Log.d(TAG, "No Step Counter Sensor found");
+            }
+
+            if (mStepDetectorSensor != null) {
+                mSensorManager.registerListener(this, mStepDetectorSensor, SensorManager.SENSOR_DELAY_FASTEST);
+            } else {
+                Log.d(TAG, "No Step Detector Sensor found");
             }
         }
     }

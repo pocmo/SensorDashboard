@@ -73,7 +73,5 @@ public class RemoteSensorManager {
         SensorDataPoint dataPoint = new SensorDataPoint(timestamp, accuracy, values);
 
         sensor.addDataPoint(dataPoint);
-
-        BusProvider.postOnMainThread(new SensorUpdatedEvent(sensor, dataPoint));
     }
 }

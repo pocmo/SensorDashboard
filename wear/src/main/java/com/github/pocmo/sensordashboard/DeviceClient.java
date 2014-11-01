@@ -12,6 +12,7 @@ import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -56,6 +57,8 @@ public class DeviceClient {
         executorService.submit(new Runnable() {
             @Override
             public void run() {
+                Log.d(TAG, sensorType + " = " + Arrays.toString(values));
+
                 sendSensorDataInBackground(sensorType, accuracy, timestamp, values);
             }
         });
@@ -77,7 +80,9 @@ public class DeviceClient {
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest).setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
                 @Override
                 public void onResult(DataApi.DataItemResult dataItemResult) {
-                    Log.d(TAG, "Sending sensor data: " + dataItemResult.getStatus().isSuccess());
+                    if (!dataItemResult.getStatus().isSuccess()) {
+                        Log.d(TAG, "Sending sensor data: BZZZP!");
+                    }
                 }
             });
         }

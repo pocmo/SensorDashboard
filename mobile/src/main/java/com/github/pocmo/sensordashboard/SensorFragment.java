@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.github.pocmo.sensordashboard.data.DataController;
 import com.github.pocmo.sensordashboard.data.Sensor;
@@ -61,6 +62,9 @@ public class SensorFragment extends Fragment {
         sensor = DataController.getInstance(getActivity()).getSensor(sensorId);
 
         View view = inflater.inflate(R.layout.fragment_symbol, container, false);
+
+
+        ((TextView) view.findViewById(R.id.title)).setText(sensor.getName());
 
         return view;
     }

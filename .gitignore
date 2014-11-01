@@ -8,3 +8,4 @@ gradle.iml
 local.properties
 mobile.iml
 wear.iml
+shared.iml

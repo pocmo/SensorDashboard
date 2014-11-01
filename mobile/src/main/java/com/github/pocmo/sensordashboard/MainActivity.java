@@ -8,7 +8,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.github.pocmo.sensordashboard.data.DataController;
 import com.github.pocmo.sensordashboard.data.Sensor;
@@ -18,7 +17,7 @@ import java.util.LinkedList;
 
 public class MainActivity extends ActionBarActivity {
 
-    private TextView pagerIndicatorText;
+
     private ViewPager pager;
 
     @Override
@@ -30,7 +29,6 @@ public class MainActivity extends ActionBarActivity {
         setSupportActionBar(toolbar);
 
 
-        pagerIndicatorText = (TextView) findViewById(R.id.pager_indicator);
         pager = (ViewPager) findViewById(R.id.pager);
 
         pager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager(), DataController.getInstance(this).getSensors()));

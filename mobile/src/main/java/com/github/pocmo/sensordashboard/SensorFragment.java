@@ -4,14 +4,20 @@ package com.github.pocmo.sensordashboard;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-
 import com.github.pocmo.sensordashboard.data.Sensor;
+import com.github.pocmo.sensordashboard.data.SensorDataPoint;
 import com.github.pocmo.sensordashboard.events.BusProvider;
+import com.github.pocmo.sensordashboard.events.SensorUpdatedEvent;
+import com.github.pocmo.sensordashboard.ui.SensorGraphView;
+import com.squareup.otto.Subscribe;
+
+import java.util.LinkedList;
 
 
 /**
@@ -25,6 +31,8 @@ public class SensorFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private long sensorId;
     private Sensor sensor;
+    private SensorGraphView sensorview;
+    private float spread;
 
 
     /**
@@ -60,20 +68,50 @@ public class SensorFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         sensor = RemoteSensorManager.getInstance(getActivity()).getSensor(sensorId);
+        spread = sensor.getMaxValue() - sensor.getMinValue();
+
         View view = inflater.inflate(R.layout.fragment_symbol, container, false);
 
 
         ((TextView) view.findViewById(R.id.title)).setText(sensor.getName());
 
+        sensorview = (SensorGraphView) view.findViewById(R.id.graph_view);
         return view;
     }
 
 
+    private void initialiseSensorData() {
+        LinkedList<SensorDataPoint> dataPoints = sensor.getDataPoints();
+
+        if (dataPoints == null || dataPoints.isEmpty()) {
+            Log.w("sensor data", "no data found for sensor " + sensor.getId() + " " + sensor.getName());
+            return;
+        }
+
+
+        LinkedList<Float>[] normalisedValues = new LinkedList[dataPoints.getFirst().getValues().length];
+
+
+        for (int i = 0; i < normalisedValues.length; ++i) {
+            normalisedValues[i] = new LinkedList<Float>();
+        }
+
+
+        for (SensorDataPoint dataPoint : dataPoints) {
+
+            for (int i = 0; i < dataPoint.getValues().length; ++i) {
+                float normalised = dataPoint.getValues()[i] / spread;
+                normalisedValues[i].add(normalised);
+            }
+        }
+
+        this.sensorview.setNormalisedDataPoints(normalisedValues);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-
-
+        initialiseSensorData();
     }
 
     @Override
@@ -88,5 +126,15 @@ public class SensorFragment extends Fragment {
         BusProvider.getInstance().unregister(this);
     }
 
+    @Subscribe
+    public void onSensorUpdatedEvent(SensorUpdatedEvent event) {
+        if (event.getSensor().getId() == this.sensor.getId()) {
+
+            for (int i = 0; i < event.getDataPoint().getValues().length; ++i) {
+                float normalised = event.getDataPoint().getValues()[i] / spread;
+                this.sensorview.addNewDataPoint(normalised, i);
+            }
+        }
+    }
 
 }

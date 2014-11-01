@@ -9,7 +9,7 @@ public class Sensor {
     private long id;
     private String name;
     private float minValue = 0f;
-    private float maxValue = 100f;
+    private float maxValue = 1f;
 
     private LinkedList<SensorDataPoint> dataPoints = new LinkedList<SensorDataPoint>();
 

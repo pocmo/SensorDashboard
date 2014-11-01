@@ -34,21 +34,21 @@ public class DataController {
     private void generateDymmyData() {
 
         Sensor sensor = new Sensor(1, "motion");
-        sensor.addDataPoint(new SensorDataPoint(System.currentTimeMillis() - 2000, 20f));
-        sensor.addDataPoint(new SensorDataPoint(System.currentTimeMillis() - 1000, 24f));
-        sensor.addDataPoint(new SensorDataPoint(System.currentTimeMillis() - 0, 22f));
+        sensor.addDataPoint(new SensorDataPoint(System.currentTimeMillis() - 2000, 1, new float[] { 20f }));
+        sensor.addDataPoint(new SensorDataPoint(System.currentTimeMillis() - 1000, 1, new float[] { 24f }));
+        sensor.addDataPoint(new SensorDataPoint(System.currentTimeMillis() - 0, 1, new float[] { 22f }));
         sensors.add(sensor);
 
         sensor = new Sensor(2, "temperature");
-        sensor.addDataPoint(new SensorDataPoint(System.currentTimeMillis() - 2000, 20f));
-        sensor.addDataPoint(new SensorDataPoint(System.currentTimeMillis() - 1000, 10f));
-        sensor.addDataPoint(new SensorDataPoint(System.currentTimeMillis() - 0, 2f));
+        sensor.addDataPoint(new SensorDataPoint(System.currentTimeMillis() - 2000, 1, new float[] { 20f }));
+        sensor.addDataPoint(new SensorDataPoint(System.currentTimeMillis() - 1000, 1, new float[] { 10f }));
+        sensor.addDataPoint(new SensorDataPoint(System.currentTimeMillis() - 0, 1, new float[] { 2f }));
         sensors.add(sensor);
 
         sensor = new Sensor(3, "speed");
-        sensor.addDataPoint(new SensorDataPoint(System.currentTimeMillis() - 2000, 70f));
-        sensor.addDataPoint(new SensorDataPoint(System.currentTimeMillis() - 1000, 20f));
-        sensor.addDataPoint(new SensorDataPoint(System.currentTimeMillis() - 500, 30f));
+        sensor.addDataPoint(new SensorDataPoint(System.currentTimeMillis() - 2000, 1, new float[] { 70f }));
+        sensor.addDataPoint(new SensorDataPoint(System.currentTimeMillis() - 1000, 1, new float[] { 20f }));
+        sensor.addDataPoint(new SensorDataPoint(System.currentTimeMillis() - 500, 1, new float[] { 30f }));
         sensors.add(sensor);
 
     }

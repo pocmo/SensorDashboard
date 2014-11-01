@@ -16,7 +16,6 @@ public class RemoteSensorManager {
     private static RemoteSensorManager instance;
 
     private Context context;
-    private Bus bus;
     private SparseArray<Sensor> sensorMapping;
     private ArrayList<Sensor> sensors;
 
@@ -30,8 +29,6 @@ public class RemoteSensorManager {
 
     private RemoteSensorManager(Context context) {
         this.context = context;
-        this.bus = BusProvider.getInstance();
-
         this.sensorMapping = new SparseArray<Sensor>();
         this.sensors = new ArrayList<Sensor>();
     }
@@ -55,7 +52,7 @@ public class RemoteSensorManager {
         sensors.add(sensor);
         sensorMapping.append(id, sensor);
 
-        bus.post(new NewSensorEvent(sensor));
+        BusProvider.postOnMainThread(new NewSensorEvent(sensor));
 
         return sensor;
     }

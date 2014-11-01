@@ -5,6 +5,7 @@ import android.util.SparseArray;
 
 import com.github.pocmo.sensordashboard.data.Sensor;
 import com.github.pocmo.sensordashboard.data.SensorDataPoint;
+import com.github.pocmo.sensordashboard.data.SensorNames;
 import com.github.pocmo.sensordashboard.events.BusProvider;
 import com.github.pocmo.sensordashboard.events.NewSensorEvent;
 import com.github.pocmo.sensordashboard.events.SensorUpdatedEvent;
@@ -19,6 +20,7 @@ public class RemoteSensorManager {
     private Context context;
     private SparseArray<Sensor> sensorMapping;
     private ArrayList<Sensor> sensors;
+    private SensorNames sensorNames;
 
     public static synchronized RemoteSensorManager getInstance(Context context) {
         if (instance == null) {
@@ -32,6 +34,7 @@ public class RemoteSensorManager {
         this.context = context;
         this.sensorMapping = new SparseArray<Sensor>();
         this.sensors = new ArrayList<Sensor>();
+        this.sensorNames = new SensorNames();
     }
 
     public List<Sensor> getSensors() {
@@ -43,7 +46,7 @@ public class RemoteSensorManager {
     }
 
     private Sensor createSensor(int id) {
-        Sensor sensor = new Sensor(id, "Unknown");
+        Sensor sensor = new Sensor(id, sensorNames.getName(id));
 
         sensors.add(sensor);
         sensorMapping.append(id, sensor);

@@ -12,6 +12,8 @@ import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class DeviceClient {
@@ -30,13 +32,14 @@ public class DeviceClient {
 
     private Context context;
     private GoogleApiClient googleApiClient;
+    private ExecutorService executorService;
 
     private DeviceClient(Context context) {
         this.context = context;
 
-        this.googleApiClient = new GoogleApiClient.Builder(context)
-                .addApi(Wearable.API)
-                .build();
+        googleApiClient = new GoogleApiClient.Builder(context).addApi(Wearable.API).build();
+
+        executorService = Executors.newCachedThreadPool();
     }
 
     private boolean validateConnection() {
@@ -49,7 +52,16 @@ public class DeviceClient {
         return result.isSuccess();
     }
 
-    public void sendSensorData(int sensorType, int accuracy, long timestamp, float[] values) {
+    public void sendSensorData(final int sensorType, final int accuracy, final long timestamp, final float[] values) {
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                sendSensorDataInBackground(sensorType, accuracy, timestamp, values);
+            }
+        });
+    }
+
+    private void sendSensorDataInBackground(int sensorType, int accuracy, long timestamp, float[] values) {
         PutDataMapRequest dataMap = PutDataMapRequest.create("/sensors/" + sensorType);
 
         dataMap.getDataMap().putInt(DataMapKeys.ACCURACY, accuracy);

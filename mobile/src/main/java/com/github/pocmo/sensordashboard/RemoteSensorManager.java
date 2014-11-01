@@ -38,12 +38,7 @@ public class RemoteSensorManager {
     }
 
     public Sensor getSensor(long id) {
-        for (Sensor sensor : this.sensors) {
-            if (sensor.getId() == id) {
-                return sensor;
-            }
-        }
-        return null;
+        return sensorMapping.get((int) id);
     }
 
     private Sensor createSensor(int id) {

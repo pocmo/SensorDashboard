@@ -34,7 +34,6 @@ public class Sensor {
         return (LinkedList<SensorDataPoint>) dataPoints.clone();
     }
 
-
     public void addDataPoint(SensorDataPoint dataPoint){
         dataPoints.add(dataPoint);
     }

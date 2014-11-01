@@ -28,11 +28,11 @@ public class SensorGraphView extends View {
         rectPaints[0] = new Paint();
         rectPaints[0].setColor(0xFFFF0000);
 
-        rectPaints[0] = new Paint();
-        rectPaints[0].setColor(0xFFFFFF00);
+        rectPaints[1] = new Paint();
+        rectPaints[1].setColor(0xFFFFFF00);
 
-        rectPaints[0] = new Paint();
-        rectPaints[0].setColor(0xFFFF00FF);
+        rectPaints[2] = new Paint();
+        rectPaints[2].setColor(0xFFFF00FF);
     }
 
 

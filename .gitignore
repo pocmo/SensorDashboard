@@ -3,3 +3,8 @@
 /.idea/
 .DS_Store
 /build
+SensorDashboard.iml
+gradle.iml
+local.properties
+mobile.iml
+wear.iml

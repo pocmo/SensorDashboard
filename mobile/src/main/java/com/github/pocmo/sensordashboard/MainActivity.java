@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.github.pocmo.sensordashboard.data.Sensor;
+import com.github.pocmo.sensordashboard.events.BusProvider;
+import com.github.pocmo.sensordashboard.events.NewSensorEvent;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
@@ -31,7 +33,7 @@ public class MainActivity extends ActionBarActivity {
 
         pager = (ViewPager) findViewById(R.id.pager);
 
-        pager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager(), RemoteSensorManager.getInstance(this).getSensors()));
+
 
     }
 
@@ -58,6 +60,19 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BusProvider.getInstance().register(this);
+
+        pager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager(), RemoteSensorManager.getInstance(this).getSensors()));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BusProvider.getInstance().register(this);
+    }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         private List<Sensor> sensors;
@@ -84,7 +99,7 @@ public class MainActivity extends ActionBarActivity {
 
 
     @Subscribe
-    public void onNewSensorEvent() {
+    public void onNewSensorEvent(NewSensorEvent event) {
         pager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager(), RemoteSensorManager.getInstance(this).getSensors()));
     }
 }

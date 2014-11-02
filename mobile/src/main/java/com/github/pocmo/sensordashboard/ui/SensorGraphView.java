@@ -141,6 +141,8 @@ public class SensorGraphView extends View {
         int pointSpan = width / maxValues;
 
 
+        float previousX = -1;
+        float previousY = -1;
         for (int i = 0; i < this.normalisedDataPoints.length; ++i) {
 
             if (this.normalisedDataPoints[i] == null) {
@@ -154,10 +156,20 @@ public class SensorGraphView extends View {
 
 
                 canvas.drawCircle(currentX, y, CIRCLE_SIZE, rectPaints[i]);
+
+
+                if (previousX != -1 && previousY != -1) {
+                    canvas.drawLine(previousX, previousY, currentX, y, rectPaints[i]);
+
+                }
+
+                previousX = currentX;
+                previousY = y;
+
                 currentX += pointSpan;
-
             }
-
+            previousX = -1;
+            previousY = -1;
 
         }
 

@@ -148,6 +148,8 @@ public class SensorFragment extends Fragment {
     public void onSensorUpdatedEvent(SensorUpdatedEvent event) {
         if (event.getSensor().getId() == this.sensor.getId()) {
 
+
+
             for (int i = 0; i < event.getDataPoint().getValues().length; ++i) {
                 float normalised = (event.getDataPoint().getValues()[i] - sensor.getMinValue()) / spread;
                 this.sensorview.addNewDataPoint(normalised, i);

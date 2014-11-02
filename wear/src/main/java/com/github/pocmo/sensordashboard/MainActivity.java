@@ -11,6 +11,9 @@ import android.view.View;
 import android.view.WindowManager;
 
 import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends Activity implements SensorEventListener {
 
@@ -149,7 +152,24 @@ public class MainActivity extends Activity implements SensorEventListener {
             }
 
             if (mHeartrateSensor != null) {
-                mSensorManager.registerListener(this, mHeartrateSensor, SensorManager.SENSOR_DELAY_FASTEST);
+                ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+                scheduler.scheduleAtFixedRate(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.d(TAG, "register Heartrate Sensor");
+                                mSensorManager.registerListener(MainActivity.this, mHeartrateSensor, SensorManager.SENSOR_DELAY_FASTEST);
+
+                                try {
+                                    Thread.sleep(10000);
+                                } catch (InterruptedException e) {
+                                    Log.e(TAG, "Interrupted while waitting to unregister Heartrate Sensor");
+                                }
+
+                                Log.d(TAG, "unregister Heartrate Sensor");
+                                mSensorManager.unregisterListener(MainActivity.this, mHeartrateSensor);
+                            }
+                        }, 3, 15, TimeUnit.SECONDS);
             } else {
                 Log.d(TAG, "No Heartrate Sensor found");
             }

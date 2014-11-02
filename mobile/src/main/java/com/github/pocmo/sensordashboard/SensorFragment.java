@@ -83,6 +83,9 @@ public class SensorFragment extends Fragment {
         view.findViewById(R.id.legend1).setBackgroundColor(UIContstants.COLOUR_1);
         view.findViewById(R.id.legend2).setBackgroundColor(UIContstants.COLOUR_2);
         view.findViewById(R.id.legend3).setBackgroundColor(UIContstants.COLOUR_3);
+        view.findViewById(R.id.legend4).setBackgroundColor(UIContstants.COLOUR_4);
+        view.findViewById(R.id.legend5).setBackgroundColor(UIContstants.COLOUR_5);
+        view.findViewById(R.id.legend6).setBackgroundColor(UIContstants.COLOUR_6);
 
         return view;
     }
@@ -90,9 +93,6 @@ public class SensorFragment extends Fragment {
 
     private void initialiseSensorData() {
         spread = sensor.getMaxValue() - sensor.getMinValue();
-
-        Log.e("TMP", "new spread " + spread + "sensor.getMaxValue() " + sensor.getMaxValue() + " sensor.getMinValue() "+ sensor.getMinValue());
-
         LinkedList<SensorDataPoint> dataPoints = sensor.getDataPoints();
 
         if (dataPoints == null || dataPoints.isEmpty()) {
@@ -143,12 +143,7 @@ public class SensorFragment extends Fragment {
         if (event.getSensor().getId() == this.sensor.getId()) {
 
             for (int i = 0; i < event.getDataPoint().getValues().length; ++i) {
-                float normalised = (event.getDataPoint().getValues()[i] - sensor.getMinValue() ) / spread;
-
-
-
-                Log.e("TMP", "value "+ event.getDataPoint().getValues()[i] + " normalised " + normalised + "spread " + spread);
-                Log.e("TMP",  "sensor.getMaxValue() " + sensor.getMaxValue() + " sensor.getMinValue() "+ sensor.getMinValue());
+                float normalised = (event.getDataPoint().getValues()[i] - sensor.getMinValue()) / spread;
                 this.sensorview.addNewDataPoint(normalised, i);
             }
         }

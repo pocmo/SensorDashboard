@@ -6,9 +6,10 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import com.github.pocmo.sensordashboard.data.Sensor;
 import com.github.pocmo.sensordashboard.events.BusProvider;
@@ -22,6 +23,7 @@ public class MainActivity extends ActionBarActivity {
 
 
     private ViewPager pager;
+    private View emptyState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class MainActivity extends ActionBarActivity {
 
         pager = (ViewPager) findViewById(R.id.pager);
 
+        emptyState = findViewById(R.id.empty_state);
 
 
     }
@@ -41,19 +44,14 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -65,9 +63,14 @@ public class MainActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
         BusProvider.getInstance().register(this);
+        List<Sensor> sensors = RemoteSensorManager.getInstance(this).getSensors();
+        pager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager(), sensors));
 
-        Log.e("TMP", "onResume, RemoteSensorManager.getInstance(this).getSensors() "+ RemoteSensorManager.getInstance(this).getSensors().size());
-        pager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager(), RemoteSensorManager.getInstance(this).getSensors()));
+        if (sensors.size() > 0) {
+            emptyState.setVisibility(View.GONE);
+        } else {
+            emptyState.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -84,6 +87,12 @@ public class MainActivity extends ActionBarActivity {
             this.sensors = symbols;
         }
 
+
+        public void addNewSensor(Sensor sensor) {
+            this.sensors.add(sensor);
+        }
+
+
         private Sensor getItemObject(int position) {
             return sensors.get(position);
         }
@@ -97,12 +106,19 @@ public class MainActivity extends ActionBarActivity {
         public int getCount() {
             return sensors.size();
         }
+
     }
 
 
+    private void notifyUSerForNewSensor(Sensor sensor) {
+        Toast.makeText(this, "New Sensor!\n" + sensor.getName(), Toast.LENGTH_SHORT).show();
+    }
+
     @Subscribe
-    public void onNewSensorEvent(NewSensorEvent event) {
-        Log.e("TMP", "onNewSensorEvent");
-        pager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager(), RemoteSensorManager.getInstance(this).getSensors()));
+    public void onNewSensorEvent(final NewSensorEvent event) {
+        ((ScreenSlidePagerAdapter) pager.getAdapter()).addNewSensor(event.getSensor());
+        pager.getAdapter().notifyDataSetChanged();
+        emptyState.setVisibility(View.GONE);
+        notifyUSerForNewSensor(event.getSensor());
     }
 }

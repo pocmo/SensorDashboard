@@ -23,14 +23,30 @@
         android:layout_weight="1"
         >
 
-
-        <android.support.v4.view.ViewPager
+        <FrameLayout
             android:layout_alignParentTop="true"
             android:layout_above="@+id/bottom_part"
-            android:id="@+id/pager"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
 
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+
+            <TextView
+                android:layout_margin="24dp"
+                android:id="@+id/empty_state"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:drawableTop="@drawable/large_bw"
+                android:textSize="24sp"
+                android:text="Waiting for sensor input from a wearable.."/>
+
+
+        </FrameLayout>
 
         <LinearLayout
             android:layout_alignParentBottom="true"

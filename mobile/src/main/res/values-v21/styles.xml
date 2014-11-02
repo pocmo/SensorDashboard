@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">#259b24</item>
         <item name="colorPrimaryDark">#056f00</item>
         <item name="colorAccent">#72d572</item>
         <item name="colorControlHighlight">#a3e9a4</item>
         <item name="android:statusBarColor">#0d5302</item>
+    </style>
+
+
+    <style name="risedview">
+        <item name="android:elevation">2dp</item>
     </style>
 </resources>

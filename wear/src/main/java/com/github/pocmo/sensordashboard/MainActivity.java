@@ -49,6 +49,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     private Sensor mGyroscopeSensor;
     private Sensor mGyroscopeUncalibratedSensor;
     private Sensor mHeartrateSensor;
+    private Sensor mHeartrateSamsungSensor;
     private Sensor mLightSensor;
     private Sensor mLinearAccelerationSensor;
     private Sensor mMagneticFieldSensor;
@@ -86,6 +87,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         mGyroscopeSensor = mSensorManager.getDefaultSensor(SENS_GYROSCOPE);
         mGyroscopeUncalibratedSensor = mSensorManager.getDefaultSensor(SENS_GYROSCOPE_UNCALIBRATED);
         mHeartrateSensor = mSensorManager.getDefaultSensor(SENS_HEARTRATE);
+        mHeartrateSamsungSensor = mSensorManager.getDefaultSensor(65562);
         mLightSensor = mSensorManager.getDefaultSensor(SENS_LIGHT);
         mLinearAccelerationSensor = mSensorManager.getDefaultSensor(SENS_LINEAR_ACCELERATION);
         mMagneticFieldSensor = mSensorManager.getDefaultSensor(SENS_MAGNETIC_FIELD);
@@ -150,6 +152,12 @@ public class MainActivity extends Activity implements SensorEventListener {
                 mSensorManager.registerListener(this, mHeartrateSensor, SensorManager.SENSOR_DELAY_FASTEST);
             } else {
                 Log.d(TAG, "No Heartrate Sensor found");
+            }
+
+            if (mHeartrateSamsungSensor != null) {
+                mSensorManager.registerListener(this, mHeartrateSamsungSensor, SensorManager.SENSOR_DELAY_FASTEST);
+            } else {
+                Log.d(TAG, "Samsungs Heartrate Sensor not found");
             }
 
             if (mLightSensor != null) {

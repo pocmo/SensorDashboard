@@ -11,6 +11,9 @@ import android.view.View;
 import android.view.WindowManager;
 
 import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends Activity implements SensorEventListener {
 
@@ -49,6 +52,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     private Sensor mGyroscopeSensor;
     private Sensor mGyroscopeUncalibratedSensor;
     private Sensor mHeartrateSensor;
+    private Sensor mHeartrateSamsungSensor;
     private Sensor mLightSensor;
     private Sensor mLinearAccelerationSensor;
     private Sensor mMagneticFieldSensor;
@@ -86,6 +90,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         mGyroscopeSensor = mSensorManager.getDefaultSensor(SENS_GYROSCOPE);
         mGyroscopeUncalibratedSensor = mSensorManager.getDefaultSensor(SENS_GYROSCOPE_UNCALIBRATED);
         mHeartrateSensor = mSensorManager.getDefaultSensor(SENS_HEARTRATE);
+        mHeartrateSamsungSensor = mSensorManager.getDefaultSensor(65562);
         mLightSensor = mSensorManager.getDefaultSensor(SENS_LIGHT);
         mLinearAccelerationSensor = mSensorManager.getDefaultSensor(SENS_LINEAR_ACCELERATION);
         mMagneticFieldSensor = mSensorManager.getDefaultSensor(SENS_MAGNETIC_FIELD);
@@ -147,9 +152,32 @@ public class MainActivity extends Activity implements SensorEventListener {
             }
 
             if (mHeartrateSensor != null) {
-                mSensorManager.registerListener(this, mHeartrateSensor, SensorManager.SENSOR_DELAY_FASTEST);
+                ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+                scheduler.scheduleAtFixedRate(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.d(TAG, "register Heartrate Sensor");
+                                mSensorManager.registerListener(MainActivity.this, mHeartrateSensor, SensorManager.SENSOR_DELAY_FASTEST);
+
+                                try {
+                                    Thread.sleep(10000);
+                                } catch (InterruptedException e) {
+                                    Log.e(TAG, "Interrupted while waitting to unregister Heartrate Sensor");
+                                }
+
+                                Log.d(TAG, "unregister Heartrate Sensor");
+                                mSensorManager.unregisterListener(MainActivity.this, mHeartrateSensor);
+                            }
+                        }, 3, 15, TimeUnit.SECONDS);
             } else {
                 Log.d(TAG, "No Heartrate Sensor found");
+            }
+
+            if (mHeartrateSamsungSensor != null) {
+                mSensorManager.registerListener(this, mHeartrateSamsungSensor, SensorManager.SENSOR_DELAY_FASTEST);
+            } else {
+                Log.d(TAG, "Samsungs Heartrate Sensor not found");
             }
 
             if (mLightSensor != null) {

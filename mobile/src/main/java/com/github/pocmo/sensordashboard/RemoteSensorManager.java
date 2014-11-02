@@ -10,11 +10,14 @@ import com.github.pocmo.sensordashboard.data.SensorNames;
 import com.github.pocmo.sensordashboard.events.BusProvider;
 import com.github.pocmo.sensordashboard.events.NewSensorEvent;
 import com.github.pocmo.sensordashboard.events.SensorUpdatedEvent;
+import com.github.pocmo.sensordashboard.shared.ClientPaths;
 import com.github.pocmo.sensordashboard.shared.DataMapKeys;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.MessageApi;
+import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
@@ -134,6 +137,45 @@ public class RemoteSensorManager {
                     Log.d(TAG, "Filter by sensor " + sensorId + ": " + dataItemResult.getStatus().isSuccess());
                 }
             });
+        }
+    }
+
+    public void startMeasurement() {
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                controlMeasurementInBackground(ClientPaths.START_MEASUREMENT);
+            }
+        });
+    }
+
+    public void stopMeasurement() {
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                controlMeasurementInBackground(ClientPaths.STOP_MEASUREMENT);
+            }
+        });
+    }
+
+    private void controlMeasurementInBackground(final String path) {
+        if (validateConnection()) {
+            List<Node> nodes = Wearable.NodeApi.getConnectedNodes(googleApiClient).await().getNodes();
+
+            Log.d(TAG, "Sending to nodes: " + nodes.size());
+
+            for (Node node : nodes) {
+                Wearable.MessageApi.sendMessage(
+                        googleApiClient, node.getId(), path, null
+                ).setResultCallback(new ResultCallback<MessageApi.SendMessageResult>() {
+                    @Override
+                    public void onResult(MessageApi.SendMessageResult sendMessageResult) {
+                        Log.d(TAG, "controlMeasurementInBackground(" + path + "): " + sendMessageResult.getStatus().isSuccess());
+                    }
+                });
+            }
+        } else {
+            Log.w(TAG, "No connection possible");
         }
     }
 }

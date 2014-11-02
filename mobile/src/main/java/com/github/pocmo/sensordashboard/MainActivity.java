@@ -93,12 +93,17 @@ public class MainActivity extends ActionBarActivity {
         } else {
             emptyState.setVisibility(View.VISIBLE);
         }
+
+        remoteSensorManager.startMeasurement();
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         BusProvider.getInstance().register(this);
+
+        remoteSensorManager.stopMeasurement();
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {

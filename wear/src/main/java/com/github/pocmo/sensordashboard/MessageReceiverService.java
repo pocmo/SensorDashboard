@@ -1,16 +1,20 @@
 package com.github.pocmo.sensordashboard;
 
+import android.content.Intent;
+import android.hardware.Sensor;
 import android.net.Uri;
 
+import com.github.pocmo.sensordashboard.shared.ClientPaths;
 import com.github.pocmo.sensordashboard.shared.DataMapKeys;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.DataItem;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
+import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
 
-public class FilterReceiverService extends WearableListenerService {
+public class MessageReceiverService extends WearableListenerService {
     private DeviceClient deviceClient;
 
     @Override
@@ -36,6 +40,17 @@ public class FilterReceiverService extends WearableListenerService {
                     deviceClient.setSensorFilter(filterById);
                 }
             }
+        }
+    }
+
+    @Override
+    public void onMessageReceived(MessageEvent messageEvent) {
+        if (messageEvent.getPath().equals(ClientPaths.START_MEASUREMENT)) {
+            startService(new Intent(this, SensorService.class));
+        }
+
+        if (messageEvent.getPath().equals(ClientPaths.STOP_MEASUREMENT)) {
+            stopService(new Intent(this, SensorService.class));
         }
     }
 }

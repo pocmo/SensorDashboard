@@ -20,7 +20,7 @@ import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
-
+    private RemoteSensorManager remoteSensorManager;
 
     private ViewPager pager;
     private View emptyState;
@@ -30,15 +30,37 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        remoteSensorManager = RemoteSensorManager.getInstance(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
-
 
         pager = (ViewPager) findViewById(R.id.pager);
 
         emptyState = findViewById(R.id.empty_state);
 
+        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i2) {
 
+            }
+
+            @Override
+            public void onPageSelected(int id) {
+                ScreenSlidePagerAdapter adapter = (ScreenSlidePagerAdapter) pager.getAdapter();
+                if (adapter != null) {
+                    Sensor sensor = adapter.getItemObject(id);
+                    if (sensor != null) {
+                        remoteSensorManager.filterBySensorId((int) sensor.getId());
+                    }
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
     }
 
 

@@ -18,24 +18,27 @@ public class SensorService extends Service implements SensorEventListener {
     private static final String TAG = "SensorDashboard/SensorService";
 
     private final static int SENS_ACCELEROMETER = Sensor.TYPE_ACCELEROMETER;
-    private final static int SENS_AMBIENT_TEMPERATURE = Sensor.TYPE_AMBIENT_TEMPERATURE;
-    private final static int SENS_GAME_ROTATION_VECTOR = Sensor.TYPE_GAME_ROTATION_VECTOR;
-    private final static int SENS_GEOMAGNETIC = Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR;
-    private final static int SENS_GRAVITY = Sensor.TYPE_GRAVITY;
-    private final static int SENS_GYROSCOPE = Sensor.TYPE_GYROSCOPE;
-    private final static int SENS_GYROSCOPE_UNCALIBRATED = Sensor.TYPE_GYROSCOPE_UNCALIBRATED;
-    private final static int SENS_HEARTRATE = Sensor.TYPE_HEART_RATE;
-    private final static int SENS_LIGHT = Sensor.TYPE_LIGHT;
-    private final static int SENS_LINEAR_ACCELERATION = Sensor.TYPE_LINEAR_ACCELERATION;
     private final static int SENS_MAGNETIC_FIELD = Sensor.TYPE_MAGNETIC_FIELD;
-    private final static int SENS_MAGNETIC_FIELD_UNCALIBRATED = Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED;
+    // 3 = @Deprecated Orientation
+    private final static int SENS_GYROSCOPE = Sensor.TYPE_GYROSCOPE;
+    private final static int SENS_LIGHT = Sensor.TYPE_LIGHT;
     private final static int SENS_PRESSURE = Sensor.TYPE_PRESSURE;
+    // 7 = @Deprecated Temperature
     private final static int SENS_PROXIMITY = Sensor.TYPE_PROXIMITY;
-    private final static int SENS_HUMIDITY = Sensor.TYPE_RELATIVE_HUMIDITY;
+    private final static int SENS_GRAVITY = Sensor.TYPE_GRAVITY;
+    private final static int SENS_LINEAR_ACCELERATION = Sensor.TYPE_LINEAR_ACCELERATION;
     private final static int SENS_ROTATION_VECTOR = Sensor.TYPE_ROTATION_VECTOR;
+    private final static int SENS_HUMIDITY = Sensor.TYPE_RELATIVE_HUMIDITY;
+    // TODO: there's no Android Wear devices yet with a body temperature monitor
+    private final static int SENS_AMBIENT_TEMPERATURE = Sensor.TYPE_AMBIENT_TEMPERATURE;
+    private final static int SENS_MAGNETIC_FIELD_UNCALIBRATED = Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED;
+    private final static int SENS_GAME_ROTATION_VECTOR = Sensor.TYPE_GAME_ROTATION_VECTOR;
+    private final static int SENS_GYROSCOPE_UNCALIBRATED = Sensor.TYPE_GYROSCOPE_UNCALIBRATED;
     private final static int SENS_SIGNIFICANT_MOTION = Sensor.TYPE_SIGNIFICANT_MOTION;
-    private final static int SENS_STEP_COUNTER = Sensor.TYPE_STEP_COUNTER;
     private final static int SENS_STEP_DETECTOR = Sensor.TYPE_STEP_DETECTOR;
+    private final static int SENS_STEP_COUNTER = Sensor.TYPE_STEP_COUNTER;
+    private final static int SENS_GEOMAGNETIC = Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR;
+    private final static int SENS_HEARTRATE = Sensor.TYPE_HEART_RATE;
 
     SensorManager mSensorManager;
 

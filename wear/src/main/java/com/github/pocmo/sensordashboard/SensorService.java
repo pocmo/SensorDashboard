@@ -1,26 +1,21 @@
 package com.github.pocmo.sensordashboard;
 
-import android.app.Activity;
+import android.app.Notification;
+import android.app.Service;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
-import android.view.View;
-import android.view.WindowManager;
 
-import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends Activity implements SensorEventListener {
-
-    private static final String TAG = "MainActivity";
-
-    private DeviceClient client;
-    private Random random;
+public class SensorService extends Service implements SensorEventListener {
+    private static final String TAG = "SensorDashboard/SensorService";
 
     private final static int SENS_ACCELEROMETER = Sensor.TYPE_ACCELEROMETER;
     private final static int SENS_MAGNETIC_FIELD = Sensor.TYPE_MAGNETIC_FIELD;
@@ -68,21 +63,38 @@ public class MainActivity extends Activity implements SensorEventListener {
     private Sensor mStepCounterSensor;
     private Sensor mStepDetectorSensor;
 
-    private long mLasttimestamp;
+    private DeviceClient client;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        super.onCreate();
 
-        setContentView(R.layout.activity_main);
-
-        random = new Random();
         client = DeviceClient.getInstance(this);
 
-        // TODO: Keep the Wear screen always on (for testing only!)
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setContentTitle("Sensor Dashboard");
+        builder.setSmallIcon(R.drawable.ic_launcher);
 
-        //Sensor and sensor manager
+
+
+        startForeground(1, builder.build());
+
+        startMeasurement();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        stopMeasurement();
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    protected void startMeasurement() {
         mSensorManager = ((SensorManager) getSystemService(SENSOR_SERVICE));
 
         mAccelerometerSensor = mSensorManager.getDefaultSensor(SENS_ACCELEROMETER);
@@ -105,11 +117,8 @@ public class MainActivity extends Activity implements SensorEventListener {
         mSignificantMotionSensor = mSensorManager.getDefaultSensor(SENS_SIGNIFICANT_MOTION);
         mStepCounterSensor = mSensorManager.getDefaultSensor(SENS_STEP_COUNTER);
         mStepDetectorSensor = mSensorManager.getDefaultSensor(SENS_STEP_DETECTOR);
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+
         // Register the listener
         if (mSensorManager != null) {
             if (mAccelerometerSensor != null) {
@@ -161,7 +170,7 @@ public class MainActivity extends Activity implements SensorEventListener {
                             @Override
                             public void run() {
                                 Log.d(TAG, "register Heartrate Sensor");
-                                mSensorManager.registerListener(MainActivity.this, mHeartrateSensor, SensorManager.SENSOR_DELAY_NORMAL);
+                                mSensorManager.registerListener(SensorService.this, mHeartrateSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
                                 try {
                                     Thread.sleep(10000);
@@ -170,7 +179,7 @@ public class MainActivity extends Activity implements SensorEventListener {
                                 }
 
                                 Log.d(TAG, "unregister Heartrate Sensor");
-                                mSensorManager.unregisterListener(MainActivity.this, mHeartrateSensor);
+                                mSensorManager.unregisterListener(SensorService.this, mHeartrateSensor);
                             }
                         }, 3, 15, TimeUnit.SECONDS);
             } else {
@@ -251,10 +260,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-
+    private void stopMeasurement() {
         if (mSensorManager != null)
             mSensorManager.unregisterListener(this);
     }
@@ -268,10 +274,5 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-    }
-
-
-    public void onBeep(View view) {
-        client.sendSensorData(0, 1, System.currentTimeMillis(), new float[]{random.nextFloat()});
     }
 }

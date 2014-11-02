@@ -15,7 +15,7 @@
     <style name="legend_view">
         <item name="android:clickable">true</item>
         <item name="android:background">@drawable/button_bg</item>
-        <item name="android:layout_margin">8dp</item>
+        <item name="android:padding">8dp</item>
     </style>
 
 </resources>

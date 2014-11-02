@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="pressed_bg">#FF747234</color>
-    <color name="selected_bg">#33747234</color>
+    <color name="pressed_bg">#9ccc65</color>
+    <color name="selected_bg">#dcedc8</color>
 </resources>

@@ -192,7 +192,7 @@ public class SensorGraphView extends View {
 
         canvas.drawLine(0, zeroLine, width, zeroLine, infoPaint);
         if (zeroline < 0.8f && zeroline > 0.2f) {
-            canvas.drawText("0", width - 50, zeroLine - 5, infoPaint);
+            canvas.drawText("0", width - 70, zeroLine - 5, infoPaint);
         }
 
         canvas.drawText(maxValueLabel, width - 70, 60, infoPaint);

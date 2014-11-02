@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import java.util.LinkedList;
@@ -21,8 +20,12 @@ public class SensorGraphView extends View {
     // FIXME don't hardcode 9
     private Paint[] rectPaints = new Paint[9];
 
-    private LinkedList<Float>[] normalisedDataPoints;
+    private Paint infoPaint;
 
+    private LinkedList<Float>[] normalisedDataPoints;
+    private float zeroline = 0;
+    private String maxValueLabel = "";
+    private String minValueValue = "";
 
     public SensorGraphView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -55,13 +58,19 @@ public class SensorGraphView extends View {
 
         rectPaints[8] = new Paint();
         rectPaints[8].setColor(UIContstants.COLOUR_9);
+
+
+        infoPaint = new Paint();
+        infoPaint.setColor(UIContstants.INFO_PAINT_COLOUR);
+        infoPaint.setTextSize(48f);
+        infoPaint.setAntiAlias(true);
+
     }
 
 
     public void setNormalisedDataPoints(LinkedList<Float>[] normalisedDataPoints) {
 
         this.normalisedDataPoints = normalisedDataPoints;
-
 
         for (int i = 0; i < this.normalisedDataPoints.length; ++i) {
             if (this.normalisedDataPoints[i].size() > MAX_DATA_SIZE) {
@@ -70,13 +79,23 @@ public class SensorGraphView extends View {
                 this.normalisedDataPoints[i] = new LinkedList<Float>();
                 this.normalisedDataPoints[i].addAll(tmp);
             }
-
-
         }
 
         invalidate();
     }
 
+
+    public void setMaxValueLabel(String maxValue) {
+        this.maxValueLabel = maxValue;
+    }
+
+    public void setMinValueLabel(String minValue) {
+        this.minValueValue = minValue;
+    }
+
+    public void setZeroLine(float zeroline) {
+        this.zeroline = zeroline;
+    }
 
     public void addNewDataPoint(float point, int index) {
         if (index >= normalisedDataPoints.length) {
@@ -88,7 +107,6 @@ public class SensorGraphView extends View {
         if (this.normalisedDataPoints[index].size() > MAX_DATA_SIZE) {
             this.normalisedDataPoints[index].removeFirst();
         }
-
 
         invalidate();
     }
@@ -104,6 +122,17 @@ public class SensorGraphView extends View {
 
         int height = canvas.getHeight();
         int width = canvas.getWidth();
+
+        float zeroLine = height - (height * zeroline);
+
+
+        canvas.drawLine(0, zeroLine, width, zeroLine, infoPaint);
+        if (zeroline < 0.8f && zeroline > 0.2f) {
+            canvas.drawText("0", width - 50, zeroLine - 5, infoPaint);
+        }
+
+        canvas.drawText(maxValueLabel, width - 70, 60, infoPaint);
+        canvas.drawText(minValueValue, width - 70, height - 40, infoPaint);
 
 
         int maxValues = MAX_DATA_SIZE;
@@ -121,10 +150,7 @@ public class SensorGraphView extends View {
             for (Float dataPoint : this.normalisedDataPoints[i]) {
 
 
-
                 float y = height - (height * dataPoint);
-
-
 
 
                 canvas.drawCircle(currentX, y, CIRCLE_SIZE, rectPaints[i]);

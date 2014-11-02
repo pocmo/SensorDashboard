@@ -19,6 +19,7 @@ import com.github.pocmo.sensordashboard.ui.SensorGraphView;
 import com.github.pocmo.sensordashboard.ui.UIContstants;
 import com.squareup.otto.Subscribe;
 
+import java.text.MessageFormat;
 import java.util.LinkedList;
 
 
@@ -118,6 +119,11 @@ public class SensorFragment extends Fragment {
         }
 
         this.sensorview.setNormalisedDataPoints(normalisedValues);
+        this.sensorview.setZeroLine((0 - sensor.getMinValue()) / spread);
+
+        this.sensorview.setMaxValueLabel(MessageFormat.format("{0,number,#}", sensor.getMaxValue()));
+        this.sensorview.setMinValueLabel(MessageFormat.format("{0,number,#}", sensor.getMinValue()));
+
     }
 
     @Override

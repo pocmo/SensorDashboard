@@ -3,6 +3,7 @@ package com.github.pocmo.sensordashboard.ui;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.hardware.SensorManager;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -14,8 +15,13 @@ import java.util.List;
  */
 public class SensorGraphView extends View {
 
+    private static final int CIRCLE_SIZE_ACCURACY_HIGH = 4;
+    private static final int CIRCLE_SIZE_ACCURACY_MEDIUM = 10;
+    private static final int CIRCLE_SIZE_ACCURACY_LOW = 20;
+
+
     private static final int MAX_DATA_SIZE = 300;
-    private static final int CIRCLE_SIZE = 4;
+    private static final int CIRCLE_SIZE_DEFAULT = 4;
 
     // FIXME don't hardcode 9
     private Paint[] rectPaints = new Paint[9];
@@ -23,6 +29,7 @@ public class SensorGraphView extends View {
     private Paint infoPaint;
 
     private LinkedList<Float>[] normalisedDataPoints;
+    private LinkedList<Integer>[] dataPointsAccuracy;
     private float zeroline = 0;
     private String maxValueLabel = "";
     private String minValueValue = "";
@@ -68,7 +75,7 @@ public class SensorGraphView extends View {
     }
 
 
-    public void setNormalisedDataPoints(LinkedList<Float>[] normalisedDataPoints) {
+    public void setNormalisedDataPoints(LinkedList<Float>[] normalisedDataPoints, LinkedList<Integer>[] dataPointsAccuracy) {
 
         this.normalisedDataPoints = normalisedDataPoints;
 
@@ -80,6 +87,32 @@ public class SensorGraphView extends View {
                 this.normalisedDataPoints[i].addAll(tmp);
             }
         }
+
+
+        this.dataPointsAccuracy = dataPointsAccuracy;
+
+        for (int i = 0; i < this.dataPointsAccuracy.length; ++i) {
+            if (this.dataPointsAccuracy[i].size() > MAX_DATA_SIZE) {
+
+                List tmp = this.dataPointsAccuracy[i].subList(this.dataPointsAccuracy[i].size() - MAX_DATA_SIZE - 1, this.dataPointsAccuracy[i].size() - 1);
+                this.dataPointsAccuracy[i] = new LinkedList<Integer>();
+                this.dataPointsAccuracy[i].addAll(tmp);
+            }
+        }
+
+
+        for (int i = 0; i < this.dataPointsAccuracy.length; ++i) {
+
+
+            LinkedList<Integer> tmp = new LinkedList<Integer>();
+            for (Integer integer : this.dataPointsAccuracy[i]) {
+
+                tmp.add(dataPointAccuracyToDotSize(integer));
+            }
+            this.dataPointsAccuracy[i] = tmp;
+
+        }
+
 
         invalidate();
     }
@@ -97,7 +130,7 @@ public class SensorGraphView extends View {
         this.zeroline = zeroline;
     }
 
-    public void addNewDataPoint(float point, int index) {
+    public void addNewDataPoint(float point, int accuracy, int index) {
         if (index >= normalisedDataPoints.length) {
             throw new ArrayIndexOutOfBoundsException("index too large!!");
         }
@@ -108,7 +141,31 @@ public class SensorGraphView extends View {
             this.normalisedDataPoints[index].removeFirst();
         }
 
+
+        this.dataPointsAccuracy[index].add(dataPointAccuracyToDotSize(accuracy));
+
+        if (this.dataPointsAccuracy[index].size() > MAX_DATA_SIZE) {
+            this.dataPointsAccuracy[index].removeFirst();
+        }
+
+
         invalidate();
+    }
+
+
+    private int dataPointAccuracyToDotSize(int accuracy) {
+
+        switch (accuracy) {
+            case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
+                return CIRCLE_SIZE_ACCURACY_HIGH;
+            case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
+                return CIRCLE_SIZE_ACCURACY_MEDIUM;
+            case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
+                return CIRCLE_SIZE_ACCURACY_LOW;
+            default:
+                return CIRCLE_SIZE_DEFAULT;
+        }
+
     }
 
 
@@ -149,13 +206,14 @@ public class SensorGraphView extends View {
                 continue;
             }
             int currentX = 0;//width - pointSpan;
+            int index = 0;
             for (Float dataPoint : this.normalisedDataPoints[i]) {
 
 
                 float y = height - (height * dataPoint);
 
 
-                canvas.drawCircle(currentX, y, CIRCLE_SIZE, rectPaints[i]);
+                canvas.drawCircle(currentX, y, dataPointsAccuracy[i].get(index), rectPaints[i]);
 
 
                 if (previousX != -1 && previousY != -1) {
@@ -167,9 +225,12 @@ public class SensorGraphView extends View {
                 previousY = y;
 
                 currentX += pointSpan;
+                ++index;
             }
             previousX = -1;
             previousY = -1;
+
+
 
         }
 

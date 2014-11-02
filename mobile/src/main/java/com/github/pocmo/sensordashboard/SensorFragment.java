@@ -103,10 +103,11 @@ public class SensorFragment extends Fragment {
 
 
         LinkedList<Float>[] normalisedValues = new LinkedList[dataPoints.getFirst().getValues().length];
-
+        LinkedList<Integer>[] accuracyValues = new LinkedList[dataPoints.getFirst().getValues().length];
 
         for (int i = 0; i < normalisedValues.length; ++i) {
             normalisedValues[i] = new LinkedList<Float>();
+            accuracyValues[i] = new LinkedList<Integer>();
         }
 
 
@@ -115,10 +116,12 @@ public class SensorFragment extends Fragment {
             for (int i = 0; i < dataPoint.getValues().length; ++i) {
                 float normalised = (dataPoint.getValues()[i] - sensor.getMinValue()) / spread;
                 normalisedValues[i].add(normalised);
+                accuracyValues[i].add(dataPoint.getAccuracy());
             }
         }
 
-        this.sensorview.setNormalisedDataPoints(normalisedValues);
+
+        this.sensorview.setNormalisedDataPoints(normalisedValues, accuracyValues);
         this.sensorview.setZeroLine((0 - sensor.getMinValue()) / spread);
 
         this.sensorview.setMaxValueLabel(MessageFormat.format("{0,number,#}", sensor.getMaxValue()));
@@ -149,10 +152,9 @@ public class SensorFragment extends Fragment {
         if (event.getSensor().getId() == this.sensor.getId()) {
 
 
-
             for (int i = 0; i < event.getDataPoint().getValues().length; ++i) {
                 float normalised = (event.getDataPoint().getValues()[i] - sensor.getMinValue()) / spread;
-                this.sensorview.addNewDataPoint(normalised, i);
+                this.sensorview.addNewDataPoint(normalised, event.getDataPoint().getAccuracy(), i);
             }
         }
     }

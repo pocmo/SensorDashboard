@@ -70,9 +70,8 @@ public class SensorService extends Service implements SensorEventListener {
 
         Notification.Builder builder = new Notification.Builder(this);
         builder.setContentTitle("Sensor Dashboard");
+        builder.setContentText("Collecting sensor data..");
         builder.setSmallIcon(R.drawable.ic_launcher);
-
-
 
         startForeground(1, builder.build());
 

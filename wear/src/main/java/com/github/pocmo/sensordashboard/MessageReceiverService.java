@@ -3,6 +3,7 @@ package com.github.pocmo.sensordashboard;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.net.Uri;
+import android.util.Log;
 
 import com.github.pocmo.sensordashboard.shared.ClientPaths;
 import com.github.pocmo.sensordashboard.shared.DataMapKeys;
@@ -15,6 +16,8 @@ import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
 
 public class MessageReceiverService extends WearableListenerService {
+    private static final String TAG = "SensorDashboard/MessageReceiverService";
+
     private DeviceClient deviceClient;
 
     @Override
@@ -45,6 +48,8 @@ public class MessageReceiverService extends WearableListenerService {
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
+        Log.d(TAG, "Received message: " + messageEvent.getPath());
+
         if (messageEvent.getPath().equals(ClientPaths.START_MEASUREMENT)) {
             startService(new Intent(this, SensorService.class));
         }

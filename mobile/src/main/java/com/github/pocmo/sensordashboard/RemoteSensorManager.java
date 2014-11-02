@@ -159,16 +159,23 @@ public class RemoteSensorManager {
     }
 
     private void controlMeasurementInBackground(final String path) {
-        List<Node> nodes = Wearable.NodeApi.getConnectedNodes(googleApiClient).await().getNodes();
-        for (Node node : nodes) {
-            Wearable.MessageApi.sendMessage(
-                googleApiClient, node.getId(), path, null
-            ).setResultCallback(new ResultCallback<MessageApi.SendMessageResult>() {
-                @Override
-                public void onResult(MessageApi.SendMessageResult sendMessageResult) {
-                    Log.d(TAG, "controlMeasurementInBackground(" + path + "): " + sendMessageResult.getStatus().isSuccess());
-                }
-            });
+        if (validateConnection()) {
+            List<Node> nodes = Wearable.NodeApi.getConnectedNodes(googleApiClient).await().getNodes();
+
+            Log.d(TAG, "Sending to nodes: " + nodes.size());
+
+            for (Node node : nodes) {
+                Wearable.MessageApi.sendMessage(
+                        googleApiClient, node.getId(), path, null
+                ).setResultCallback(new ResultCallback<MessageApi.SendMessageResult>() {
+                    @Override
+                    public void onResult(MessageApi.SendMessageResult sendMessageResult) {
+                        Log.d(TAG, "controlMeasurementInBackground(" + path + "): " + sendMessageResult.getStatus().isSuccess());
+                    }
+                });
+            }
+        } else {
+            Log.w(TAG, "No connection possible");
         }
     }
 }

@@ -3,8 +3,8 @@ package com.github.pocmo.sensordashboard.ui;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.hardware.SensorManager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import java.util.LinkedList;
@@ -15,14 +15,24 @@ import java.util.List;
  */
 public class SensorGraphView extends View {
 
+    private static final int CIRCLE_SIZE_ACCURACY_HIGH = 4;
+    private static final int CIRCLE_SIZE_ACCURACY_MEDIUM = 10;
+    private static final int CIRCLE_SIZE_ACCURACY_LOW = 20;
+
+
     private static final int MAX_DATA_SIZE = 300;
-    private static final int CIRCLE_SIZE = 4;
+    private static final int CIRCLE_SIZE_DEFAULT = 4;
 
     // FIXME don't hardcode 9
     private Paint[] rectPaints = new Paint[9];
 
-    private LinkedList<Float>[] normalisedDataPoints;
+    private Paint infoPaint;
 
+    private LinkedList<Float>[] normalisedDataPoints;
+    private LinkedList<Integer>[] dataPointsAccuracy;
+    private float zeroline = 0;
+    private String maxValueLabel = "";
+    private String minValueValue = "";
 
     public SensorGraphView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -55,13 +65,19 @@ public class SensorGraphView extends View {
 
         rectPaints[8] = new Paint();
         rectPaints[8].setColor(UIContstants.COLOUR_9);
+
+
+        infoPaint = new Paint();
+        infoPaint.setColor(UIContstants.INFO_PAINT_COLOUR);
+        infoPaint.setTextSize(48f);
+        infoPaint.setAntiAlias(true);
+
     }
 
 
-    public void setNormalisedDataPoints(LinkedList<Float>[] normalisedDataPoints) {
+    public void setNormalisedDataPoints(LinkedList<Float>[] normalisedDataPoints, LinkedList<Integer>[] dataPointsAccuracy) {
 
         this.normalisedDataPoints = normalisedDataPoints;
-
 
         for (int i = 0; i < this.normalisedDataPoints.length; ++i) {
             if (this.normalisedDataPoints[i].size() > MAX_DATA_SIZE) {
@@ -70,15 +86,51 @@ public class SensorGraphView extends View {
                 this.normalisedDataPoints[i] = new LinkedList<Float>();
                 this.normalisedDataPoints[i].addAll(tmp);
             }
+        }
 
+
+        this.dataPointsAccuracy = dataPointsAccuracy;
+
+        for (int i = 0; i < this.dataPointsAccuracy.length; ++i) {
+            if (this.dataPointsAccuracy[i].size() > MAX_DATA_SIZE) {
+
+                List tmp = this.dataPointsAccuracy[i].subList(this.dataPointsAccuracy[i].size() - MAX_DATA_SIZE - 1, this.dataPointsAccuracy[i].size() - 1);
+                this.dataPointsAccuracy[i] = new LinkedList<Integer>();
+                this.dataPointsAccuracy[i].addAll(tmp);
+            }
+        }
+
+
+        for (int i = 0; i < this.dataPointsAccuracy.length; ++i) {
+
+
+            LinkedList<Integer> tmp = new LinkedList<Integer>();
+            for (Integer integer : this.dataPointsAccuracy[i]) {
+
+                tmp.add(dataPointAccuracyToDotSize(integer));
+            }
+            this.dataPointsAccuracy[i] = tmp;
 
         }
+
 
         invalidate();
     }
 
 
-    public void addNewDataPoint(float point, int index) {
+    public void setMaxValueLabel(String maxValue) {
+        this.maxValueLabel = maxValue;
+    }
+
+    public void setMinValueLabel(String minValue) {
+        this.minValueValue = minValue;
+    }
+
+    public void setZeroLine(float zeroline) {
+        this.zeroline = zeroline;
+    }
+
+    public void addNewDataPoint(float point, int accuracy, int index) {
         if (index >= normalisedDataPoints.length) {
             throw new ArrayIndexOutOfBoundsException("index too large!!");
         }
@@ -90,7 +142,30 @@ public class SensorGraphView extends View {
         }
 
 
+        this.dataPointsAccuracy[index].add(dataPointAccuracyToDotSize(accuracy));
+
+        if (this.dataPointsAccuracy[index].size() > MAX_DATA_SIZE) {
+            this.dataPointsAccuracy[index].removeFirst();
+        }
+
+
         invalidate();
+    }
+
+
+    private int dataPointAccuracyToDotSize(int accuracy) {
+
+        switch (accuracy) {
+            case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
+                return CIRCLE_SIZE_ACCURACY_HIGH;
+            case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
+                return CIRCLE_SIZE_ACCURACY_MEDIUM;
+            case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
+                return CIRCLE_SIZE_ACCURACY_LOW;
+            default:
+                return CIRCLE_SIZE_DEFAULT;
+        }
+
     }
 
 
@@ -105,6 +180,17 @@ public class SensorGraphView extends View {
         int height = canvas.getHeight();
         int width = canvas.getWidth();
 
+        float zeroLine = height - (height * zeroline);
+
+
+        canvas.drawLine(0, zeroLine, width, zeroLine, infoPaint);
+        if (zeroline < 0.8f && zeroline > 0.2f) {
+            canvas.drawText("0", width - 50, zeroLine - 5, infoPaint);
+        }
+
+        canvas.drawText(maxValueLabel, width - 70, 60, infoPaint);
+        canvas.drawText(minValueValue, width - 70, height - 40, infoPaint);
+
 
         int maxValues = MAX_DATA_SIZE;
 
@@ -112,25 +198,38 @@ public class SensorGraphView extends View {
         int pointSpan = width / maxValues;
 
 
+        float previousX = -1;
+        float previousY = -1;
         for (int i = 0; i < this.normalisedDataPoints.length; ++i) {
 
             if (this.normalisedDataPoints[i] == null) {
                 continue;
             }
             int currentX = 0;//width - pointSpan;
+            int index = 0;
             for (Float dataPoint : this.normalisedDataPoints[i]) {
-
 
 
                 float y = height - (height * dataPoint);
 
 
+                canvas.drawCircle(currentX, y, dataPointsAccuracy[i].get(index), rectPaints[i]);
 
 
-                canvas.drawCircle(currentX, y, CIRCLE_SIZE, rectPaints[i]);
+                if (previousX != -1 && previousY != -1) {
+                    canvas.drawLine(previousX, previousY, currentX, y, rectPaints[i]);
+
+                }
+
+                previousX = currentX;
+                previousY = y;
+
                 currentX += pointSpan;
-
+                ++index;
             }
+            previousX = -1;
+            previousY = -1;
+
 
 
         }

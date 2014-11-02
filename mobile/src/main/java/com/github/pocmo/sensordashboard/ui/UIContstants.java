@@ -15,4 +15,7 @@ public abstract class UIContstants {
     public static final int COLOUR_8 = 0xFFcddc39;
     public static final int COLOUR_9 = 0xFFff9800;
 
+
+    public static final int INFO_PAINT_COLOUR = 0xFF9e9e9e;
+
 }

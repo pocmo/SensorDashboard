@@ -12,8 +12,9 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:id="@+id/legend1_container"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            style="@style/legend_view"
             android:orientation="horizontal">
 
             <View
@@ -35,8 +36,9 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:id="@+id/legend2_container"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            style="@style/legend_view"
             android:orientation="horizontal">
 
             <View
@@ -58,7 +60,8 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            style="@style/legend_view"
+            android:id="@+id/legend3_container"
             android:orientation="horizontal">
 
             <View
@@ -90,7 +93,8 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            style="@style/legend_view"
+            android:id="@+id/legend4_container"
             android:orientation="horizontal">
 
             <View
@@ -113,7 +117,8 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            style="@style/legend_view"
+            android:id="@+id/legend5_container"
             android:orientation="horizontal">
 
             <View
@@ -136,7 +141,8 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            style="@style/legend_view"
+            android:id="@+id/legend6_container"
             android:orientation="horizontal">
 
             <View

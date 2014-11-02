@@ -8,4 +8,14 @@
         <item name="colorControlHighlight">#a3e9a4</item>
     </style>
 
+
+    <style name="risedview">
+    </style>
+
+    <style name="legend_view">
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/button_bg</item>
+        <item name="android:layout_margin">8dp</item>
+    </style>
+
 </resources>

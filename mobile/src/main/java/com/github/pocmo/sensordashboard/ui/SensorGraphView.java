@@ -34,6 +34,8 @@ public class SensorGraphView extends View {
     private String maxValueLabel = "";
     private String minValueValue = "";
 
+    private boolean[] drawSensors = new boolean[6];
+
     public SensorGraphView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -74,6 +76,11 @@ public class SensorGraphView extends View {
 
     }
 
+
+    public void setDrawSensors(boolean[] drawSensors) {
+        this.drawSensors = drawSensors;
+        invalidate();
+    }
 
     public void setNormalisedDataPoints(LinkedList<Float>[] normalisedDataPoints, LinkedList<Integer>[] dataPointsAccuracy) {
 
@@ -202,6 +209,10 @@ public class SensorGraphView extends View {
         float previousY = -1;
         for (int i = 0; i < this.normalisedDataPoints.length; ++i) {
 
+            if (!drawSensors[i]) {
+                continue;
+            }
+
             if (this.normalisedDataPoints[i] == null) {
                 continue;
             }
@@ -229,7 +240,6 @@ public class SensorGraphView extends View {
             }
             previousX = -1;
             previousY = -1;
-
 
 
         }

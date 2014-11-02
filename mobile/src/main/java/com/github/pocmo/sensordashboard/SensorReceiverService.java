@@ -1,7 +1,7 @@
 package com.github.pocmo.sensordashboard;
 
+import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.github.pocmo.sensordashboard.shared.DataMapKeys;
 import com.google.android.gms.wearable.DataEvent;
@@ -47,11 +47,15 @@ public class SensorReceiverService extends WearableListenerService {
         for (DataEvent dataEvent : dataEvents) {
             if (dataEvent.getType() == DataEvent.TYPE_CHANGED) {
                 DataItem dataItem = dataEvent.getDataItem();
+                Uri uri = dataItem.getUri();
+                String path = uri.getPath();
 
-                unpackSensorData(
-                    Integer.parseInt(dataItem.getUri().getLastPathSegment()),
-                    DataMapItem.fromDataItem(dataItem).getDataMap()
-                );
+                if (path.startsWith("/sensors/")) {
+                    unpackSensorData(
+                        Integer.parseInt(uri.getLastPathSegment()),
+                        DataMapItem.fromDataItem(dataItem).getDataMap()
+                    );
+                }
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.github.pocmo.sensordashboard;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -74,7 +75,9 @@ public class MainActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_about) {
+
+            startActivity(new Intent(this, AboutActivity.class));
             return true;
         }
 

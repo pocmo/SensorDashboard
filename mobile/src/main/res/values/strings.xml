@@ -2,6 +2,24 @@
 <resources>
 
     <string name="app_name">Sensor Dashboard</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_about">About</string>
+    <string name="about_development_content"><![CDATA[
+<p><b>Development</b> <a href="http://stuermer-benjamin.de/">Benjamin Stürmer</a></p>
+<p><b>Development</b> <a href="https://plus.google.com/u/0/+SebastianKaspari/posts">Sebastian Kaspari</a></p>
+<p><b>Development</b> <a href="https://plus.google.com/u/0/+JuhaniLehtimäki">Juhani Lehtimäki</a></p>
+]]></string>
+
+    <string name="about_open_source_content"><![CDATA[
+<p><b>Square Otto</b> <a href="http://square.github.io/otto/">http://square.github.io/otto/</a></p>
+]]></string>
+
+
+    <string name="about_github_content"><![CDATA[
+<p><b>Download source from</b><br/><a href="https://github.com/pocmo/SensorDashboard">https://github.com/pocmo/SensorDashboard</a></p>
+<p>Distributed under Apache 2 License</p>
+]]></string>
+
+
+
 
 </resources>

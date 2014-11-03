@@ -1,0 +1,74 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+            android:layout_width="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:background="#88FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/header"
+            android:layout_marginBottom="24dp"
+            style="@style/AboutHeaderStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+        <TextView
+            android:layout_marginBottom="8dp"
+            android:text="App Development"
+            style="@style/AboutHeaderStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="16dp"
+            android:id="@+id/dev_content"
+            style="@style/AboutContentStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_marginBottom="8dp"
+            android:text="Source Code"
+            style="@style/AboutHeaderStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_marginBottom="16dp"
+            android:id="@+id/about_github_content"
+            android:layout_marginLeft="8dp"
+            style="@style/AboutContentStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+        <TextView
+            android:layout_marginBottom="8dp"
+            android:text="Open Source Projects"
+            style="@style/AboutHeaderStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_marginBottom="16dp"
+            android:id="@+id/oss_content"
+            android:layout_marginLeft="8dp"
+            style="@style/AboutContentStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+</ScrollView>

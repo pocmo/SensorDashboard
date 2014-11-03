@@ -144,6 +144,9 @@ public class SensorService extends Service implements SensorEventListener {
             }
 
             if (mHeartrateSensor != null) {
+                final int measurementDuration   = 10;   // Seconds
+                final int measurementBreak      = 5;    // Seconds
+
                 ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
                 scheduler.scheduleAtFixedRate(
                         new Runnable() {
@@ -153,7 +156,7 @@ public class SensorService extends Service implements SensorEventListener {
                                 mSensorManager.registerListener(SensorService.this, mHeartrateSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
                                 try {
-                                    Thread.sleep(10000);
+                                    Thread.sleep(measurementDuration * 1000);
                                 } catch (InterruptedException e) {
                                     Log.e(TAG, "Interrupted while waitting to unregister Heartrate Sensor");
                                 }
@@ -161,7 +164,7 @@ public class SensorService extends Service implements SensorEventListener {
                                 Log.d(TAG, "unregister Heartrate Sensor");
                                 mSensorManager.unregisterListener(SensorService.this, mHeartrateSensor);
                             }
-                        }, 3, 15, TimeUnit.SECONDS);
+                        }, 3, measurementDuration + measurementBreak, TimeUnit.SECONDS);
             } else {
                 Log.d(TAG, "No Heartrate Sensor found");
             }

@@ -7,3 +7,5 @@ SensorDashboard.iml
 gradle.iml
 local.properties
 *.iml
+wear-release.apk
+mobile-release.apk

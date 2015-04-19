@@ -104,7 +104,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        BusProvider.getInstance().register(this);
+        BusProvider.getInstance().unregister(this);
 
         remoteSensorManager.stopMeasurement();
     }

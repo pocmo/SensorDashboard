@@ -2,6 +2,7 @@ package com.github.pocmo.sensordashboard;
 
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -16,7 +17,6 @@ import com.github.pocmo.sensordashboard.events.BusProvider;
 import com.github.pocmo.sensordashboard.events.SensorRangeEvent;
 import com.github.pocmo.sensordashboard.events.SensorUpdatedEvent;
 import com.github.pocmo.sensordashboard.ui.SensorGraphView;
-import com.github.pocmo.sensordashboard.ui.UIContstants;
 import com.squareup.otto.Subscribe;
 
 import java.text.MessageFormat;
@@ -82,13 +82,14 @@ public class SensorFragment extends Fragment {
 
         sensorview = (SensorGraphView) view.findViewById(R.id.graph_view);
 
+        Resources res = getResources();
 
-        view.findViewById(R.id.legend1).setBackgroundColor(UIContstants.COLOUR_1);
-        view.findViewById(R.id.legend2).setBackgroundColor(UIContstants.COLOUR_2);
-        view.findViewById(R.id.legend3).setBackgroundColor(UIContstants.COLOUR_3);
-        view.findViewById(R.id.legend4).setBackgroundColor(UIContstants.COLOUR_4);
-        view.findViewById(R.id.legend5).setBackgroundColor(UIContstants.COLOUR_5);
-        view.findViewById(R.id.legend6).setBackgroundColor(UIContstants.COLOUR_6);
+        view.findViewById(R.id.legend1).setBackgroundColor(res.getColor(R.color.graph_color_1));
+        view.findViewById(R.id.legend2).setBackgroundColor(res.getColor(R.color.graph_color_2));
+        view.findViewById(R.id.legend3).setBackgroundColor(res.getColor(R.color.graph_color_3));
+        view.findViewById(R.id.legend4).setBackgroundColor(res.getColor(R.color.graph_color_4));
+        view.findViewById(R.id.legend5).setBackgroundColor(res.getColor(R.color.graph_color_5));
+        view.findViewById(R.id.legend6).setBackgroundColor(res.getColor(R.color.graph_color_6));
 
 
 // this could be better.. btu hey, it's a hackathon!

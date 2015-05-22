@@ -1,11 +1,14 @@
 package com.github.pocmo.sensordashboard.ui;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.hardware.SensorManager;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.github.pocmo.sensordashboard.R;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -39,38 +42,38 @@ public class SensorGraphView extends View {
     public SensorGraphView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
+        Resources res = context.getResources();
+
         rectPaints[0] = new Paint();
-        rectPaints[0].setColor(UIContstants.COLOUR_1);
+        rectPaints[0].setColor(res.getColor(R.color.graph_color_1));
 
         rectPaints[1] = new Paint();
-        rectPaints[1].setColor(UIContstants.COLOUR_2);
+        rectPaints[1].setColor(res.getColor(R.color.graph_color_2));
 
         rectPaints[2] = new Paint();
-        rectPaints[2].setColor(UIContstants.COLOUR_3);
-
+        rectPaints[2].setColor(res.getColor(R.color.graph_color_3));
 
         rectPaints[3] = new Paint();
-        rectPaints[3].setColor(UIContstants.COLOUR_4);
+        rectPaints[3].setColor(res.getColor(R.color.graph_color_4));
 
         rectPaints[4] = new Paint();
-        rectPaints[4].setColor(UIContstants.COLOUR_5);
+        rectPaints[4].setColor(res.getColor(R.color.graph_color_5));
 
         rectPaints[5] = new Paint();
-        rectPaints[5].setColor(UIContstants.COLOUR_6);
-
+        rectPaints[5].setColor(res.getColor(R.color.graph_color_6));
 
         rectPaints[6] = new Paint();
-        rectPaints[6].setColor(UIContstants.COLOUR_7);
+        rectPaints[6].setColor(res.getColor(R.color.graph_color_7));
 
         rectPaints[7] = new Paint();
-        rectPaints[7].setColor(UIContstants.COLOUR_8);
+        rectPaints[7].setColor(res.getColor(R.color.graph_color_8));
 
         rectPaints[8] = new Paint();
-        rectPaints[8].setColor(UIContstants.COLOUR_9);
+        rectPaints[8].setColor(res.getColor(R.color.graph_color_9));
 
 
         infoPaint = new Paint();
-        infoPaint.setColor(UIContstants.INFO_PAINT_COLOUR);
+        infoPaint.setColor(res.getColor(R.color.graph_color_info));
         infoPaint.setTextSize(48f);
         infoPaint.setAntiAlias(true);
 

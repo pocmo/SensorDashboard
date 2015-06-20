@@ -21,6 +21,7 @@ import com.github.pocmo.sensordashboard.data.Sensor;
 import com.github.pocmo.sensordashboard.events.BusProvider;
 import com.github.pocmo.sensordashboard.events.NewSensorEvent;
 import com.github.pocmo.sensordashboard.events.TagAddedEvent;
+import com.github.pocmo.sensordashboard.ui.ExportActivity;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
@@ -88,6 +89,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     switch (item.getItemId()) {
                         case R.id.action_about:
                             startActivity(new Intent(MainActivity.this, AboutActivity.class));
+                            return true;
+                        case R.id.action_export:
+                            startActivity(new Intent(MainActivity.this, ExportActivity.class));
                             return true;
                     }
 

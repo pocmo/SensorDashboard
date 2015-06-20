@@ -5,20 +5,22 @@ import io.realm.annotations.RealmClass;
 
 @RealmClass
 public class DataEntry extends RealmObject {
-    private int id;
+    private String androidDevice;
     private long timestamp;
-    private float values;
+    private float x;
+    private float y;
+    private float z;
     private int accuracy;
 
     private String datasource;
-    private String datatype;
+    private long datatype;
 
-    public int getId() {
-        return id;
+    public String getAndroidDevice() {
+        return androidDevice;
     }
 
-    public void setId(final int pId) {
-        id = pId;
+    public void setAndroidDevice(final String pAndroidDevice) {
+        androidDevice = pAndroidDevice;
     }
 
     public long getTimestamp() {
@@ -29,12 +31,28 @@ public class DataEntry extends RealmObject {
         timestamp = pTimestamp;
     }
 
-    public float getValues() {
-        return values;
+    public float getX() {
+        return x;
     }
 
-    public void setValues(final float pValues) {
-        values = pValues;
+    public void setX(final float pX) {
+        x = pX;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setY(final float pY) {
+        y = pY;
+    }
+
+    public float getZ() {
+        return z;
+    }
+
+    public void setZ(final float pZ) {
+        z = pZ;
     }
 
     public int getAccuracy() {
@@ -53,11 +71,11 @@ public class DataEntry extends RealmObject {
         datasource = pDatasource;
     }
 
-    public String getDatatype() {
+    public long getDatatype() {
         return datatype;
     }
 
-    public void setDatatype(final String pDatatype) {
+    public void setDatatype(final long pDatatype) {
         datatype = pDatatype;
     }
 }

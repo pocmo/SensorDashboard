@@ -3,6 +3,7 @@
 
     <string name="app_name">Sensor Dashboard</string>
     <string name="action_about">About</string>
+    <string name="action_export">Export</string>
 
     <string name="devices">Devices</string>
     <string name="device_name_1">Device 1</string>

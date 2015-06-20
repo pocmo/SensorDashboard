@@ -3,7 +3,9 @@ package com.github.pocmo.sensordashboard;
 
 import android.app.Activity;
 import android.content.res.Resources;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 
 import com.github.pocmo.sensordashboard.data.Sensor;
 import com.github.pocmo.sensordashboard.data.SensorDataPoint;
+import com.github.pocmo.sensordashboard.database.DataEntry;
 import com.github.pocmo.sensordashboard.events.BusProvider;
 import com.github.pocmo.sensordashboard.events.SensorRangeEvent;
 import com.github.pocmo.sensordashboard.events.SensorUpdatedEvent;
@@ -23,6 +26,9 @@ import com.squareup.otto.Subscribe;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 
 /**
@@ -38,6 +44,9 @@ public class SensorFragment extends Fragment {
     private Sensor sensor;
     private SensorGraphView sensorview;
     private float spread;
+
+    private Realm mRealm;
+    private String mAndroidId;
 
     private boolean[] drawSensors = new boolean[6];
 
@@ -217,6 +226,9 @@ public class SensorFragment extends Fragment {
     public void onResume() {
         super.onResume();
         initialiseSensorData();
+
+        mRealm = Realm.getInstance(getActivity());
+        mAndroidId = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
     @Override
@@ -241,6 +253,17 @@ public class SensorFragment extends Fragment {
     public void onSensorUpdatedEvent(SensorUpdatedEvent event) {
         if (event.getSensor().getId() == this.sensor.getId()) {
 
+            mRealm.beginTransaction();
+            DataEntry entry = mRealm.createObject(DataEntry.class);
+            entry.setAndroidDevice(mAndroidId);
+            entry.setTimestamp(event.getDataPoint().getTimestamp());
+            entry.setX(event.getDataPoint().getValues()[0]);
+            entry.setY(event.getDataPoint().getValues()[1]);
+            entry.setZ(event.getDataPoint().getValues()[2]);
+            entry.setAccuracy(event.getDataPoint().getAccuracy());
+            entry.setDatasource("Acc");
+            entry.setDatatype(event.getSensor().getId());
+            mRealm.commitTransaction();
 
             for (int i = 0; i < event.getDataPoint().getValues().length; ++i) {
                 float normalised = (event.getDataPoint().getValues()[i] - sensor.getMinValue()) / spread;

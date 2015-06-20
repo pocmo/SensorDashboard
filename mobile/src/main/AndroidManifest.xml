@@ -3,6 +3,7 @@
           package="com.github.pocmo.sensordashboard">
 
     <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -27,6 +28,11 @@
         <activity
             android:name="com.github.pocmo.sensordashboard.AboutActivity"
             android:label="@string/action_about">
+        </activity>
+
+        <activity
+            android:name="com.github.pocmo.sensordashboard.ui.ExportActivity"
+            android:label="@string/action_export">
         </activity>
 
 

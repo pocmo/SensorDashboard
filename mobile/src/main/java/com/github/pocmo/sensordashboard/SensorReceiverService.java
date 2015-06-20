@@ -1,8 +1,10 @@
 package com.github.pocmo.sensordashboard;
 
 import android.net.Uri;
+import android.provider.Settings;
 import android.util.Log;
 
+import com.github.pocmo.sensordashboard.database.DataEntry;
 import com.github.pocmo.sensordashboard.shared.DataMapKeys;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
@@ -13,6 +15,8 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.WearableListenerService;
 
 import java.util.Arrays;
+
+import io.realm.Realm;
 
 public class SensorReceiverService extends WearableListenerService {
     private static final String TAG = "SensorDashboard/SensorReceiverService";

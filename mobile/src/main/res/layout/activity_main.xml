@@ -1,42 +1,55 @@
-<LinearLayout
+<android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false">
 
-
-    <android.support.v7.widget.Toolbar
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/my_awesome_toolbar"
-        android:layout_height="wrap_content"
+    <!-- Your normal content view -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:minHeight="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp">
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/my_awesome_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-        <TextView
-            android:layout_margin="24dp"
-            android:id="@+id/empty_state"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:drawableTop="@drawable/large_bw"
-            android:textSize="24sp"
-            android:text="Waiting for sensor input from a wearable.."/>
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/empty_state"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="24dp"
+                android:drawableTop="@drawable/large_bw"
+                android:gravity="center"
+                android:text="Waiting for sensor input from a wearable.."
+                android:textSize="24sp"/>
+
+        </FrameLayout>
+    </LinearLayout>
 
 
-    </FrameLayout>
+    <android.support.design.widget.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/drawer_layout"
+        app:menu="@menu/drawer"/>
 
-</LinearLayout>
+</android.support.v4.widget.DrawerLayout>

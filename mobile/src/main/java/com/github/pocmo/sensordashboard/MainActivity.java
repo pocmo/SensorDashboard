@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -23,6 +24,8 @@ import java.util.List;
 public class MainActivity extends ActionBarActivity {
     private RemoteSensorManager remoteSensorManager;
 
+    Toolbar mToolbar;
+
     private ViewPager pager;
     private View emptyState;
 
@@ -31,14 +34,40 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mToolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
+        emptyState = findViewById(R.id.empty_state);
+
+        initToolbar();
+        initViewPager();
+
         remoteSensorManager = RemoteSensorManager.getInstance(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
-        setSupportActionBar(toolbar);
+    }
 
+    private void initToolbar() {
+        setSupportActionBar(mToolbar);
+
+        final ActionBar ab = getSupportActionBar();
+        if (ab != null) {
+            ab.setDisplayHomeAsUpEnabled(false);
+            ab.setTitle(R.string.app_name);
+            mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.action_about:
+                            startActivity(new Intent(MainActivity.this, AboutActivity.class));
+                            return true;
+                    }
+
+                    return true;
+                }
+            });
+        }
+    }
+
+    private void initViewPager() {
         pager = (ViewPager) findViewById(R.id.pager);
-
-        emptyState = findViewById(R.id.empty_state);
 
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -69,19 +98,6 @@ public class MainActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_about) {
-
-            startActivity(new Intent(this, AboutActivity.class));
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

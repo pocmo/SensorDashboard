@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_subheader"
+        android:title="@string/devices">
+        <item
+            android:id="@+id/navigation_device1"
+            android:checked="true"
+            android:icon="@drawable/ic_launcher"
+            android:title="@string/device_name_1"/>
+
+        <item
+            android:id="@+id/navigation_device2"
+            android:checked="true"
+            android:icon="@drawable/ic_launcher"
+            android:title="@string/device_name_2"/>
+
+    </item>
+</menu>

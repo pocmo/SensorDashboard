@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.github.pocmo.sensordashboard.data.Sensor;
 import com.github.pocmo.sensordashboard.events.BusProvider;
 import com.github.pocmo.sensordashboard.events.NewSensorEvent;
-import com.github.pocmo.sensordashboard.events.TagAddedEvent;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
@@ -178,10 +177,6 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "New Sensor!\n" + sensor.getName(), Toast.LENGTH_SHORT).show();
     }
 
-    @Subscribe
-    public void onNewTagEvent(final TagAddedEvent pEvent) {
-        Toast.makeText(this, "Tag Event!\n" + pEvent.getTag().getTagName(), Toast.LENGTH_SHORT).show();
-    }
 
     @Subscribe
     public void onNewSensorEvent(final NewSensorEvent event) {

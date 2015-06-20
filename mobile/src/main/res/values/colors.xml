@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="colorPrimary">#259b24</color>
+    <color name="colorPrimaryDark">#056f00</color>
+    <color name="colorAccent">#72d572</color>
+    <color name="colorControlHighlight">#a3e9a4</color>
+    <color name="colorText">#ff767676</color>
     <color name="pressed_bg">#9ccc65</color>
     <color name="selected_bg">#dcedc8</color>
 

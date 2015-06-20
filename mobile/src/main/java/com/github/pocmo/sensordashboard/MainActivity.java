@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.github.pocmo.sensordashboard.data.Sensor;
 import com.github.pocmo.sensordashboard.events.BusProvider;
 import com.github.pocmo.sensordashboard.events.NewSensorEvent;
+import com.github.pocmo.sensordashboard.events.TagAddedEvent;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;

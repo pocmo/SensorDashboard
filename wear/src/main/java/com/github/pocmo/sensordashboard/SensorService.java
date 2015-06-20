@@ -45,6 +45,7 @@ public class SensorService extends Service implements SensorEventListener {
     private Sensor mHeartrateSensor;
 
     private DeviceClient client;
+    private ScheduledExecutorService mScheduler;
 
     @Override
     public void onCreate() {
@@ -147,8 +148,8 @@ public class SensorService extends Service implements SensorEventListener {
                 final int measurementDuration   = 10;   // Seconds
                 final int measurementBreak      = 5;    // Seconds
 
-                ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-                scheduler.scheduleAtFixedRate(
+                mScheduler = Executors.newScheduledThreadPool(1);
+                mScheduler.scheduleAtFixedRate(
                         new Runnable() {
                             @Override
                             public void run() {
@@ -165,6 +166,7 @@ public class SensorService extends Service implements SensorEventListener {
                                 mSensorManager.unregisterListener(SensorService.this, mHeartrateSensor);
                             }
                         }, 3, measurementDuration + measurementBreak, TimeUnit.SECONDS);
+
             } else {
                 Log.d(TAG, "No Heartrate Sensor found");
             }
@@ -244,8 +246,12 @@ public class SensorService extends Service implements SensorEventListener {
     }
 
     private void stopMeasurement() {
-        if (mSensorManager != null)
+        if (mSensorManager != null) {
             mSensorManager.unregisterListener(this);
+        }
+        if (!mScheduler.isTerminated()) {
+            mScheduler.shutdown();
+        }
     }
 
     @Override

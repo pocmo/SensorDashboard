@@ -56,6 +56,32 @@ public class ExportActivity extends Activity {
                 }
 
         );
+
+        Button deleteButton = (Button) findViewById(R.id.deleteButton);
+        deleteButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        deleteData();
+                    }
+                }
+        );
+    }
+
+    private void deleteData() {
+        mRealm = Realm.getInstance(this);
+        mRealm.beginTransaction();
+
+        RealmResults<DataEntry> result = mRealm.where(DataEntry.class).findAll();
+        Log.e("SensorDashboard", "rows after delete = " + result.size());
+
+        // Delete all matches
+        result.clear();
+
+        mRealm.commitTransaction();
+
+        result = mRealm.where(DataEntry.class).findAll();
+        Log.e("SensorDashboard", "rows after delete = " + result.size());
     }
 
     @Override
@@ -115,6 +141,7 @@ public class ExportActivity extends Activity {
             filewriter.write(TestString);
             filewriter.flush();
             filewriter.close();
+            Log.e("SensorDashbaord", "export finished!");
         } catch (IOException ioe) {
             Log.e("SensorDashbaord", "IOException while writing Logfile");
         }

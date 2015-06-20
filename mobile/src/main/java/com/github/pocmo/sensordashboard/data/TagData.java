@@ -8,4 +8,12 @@ public class TagData {
         tagName = pTagName;
         timestamp = pTimestamp;
     }
+
+    public String getTagName() {
+        return tagName;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
 }

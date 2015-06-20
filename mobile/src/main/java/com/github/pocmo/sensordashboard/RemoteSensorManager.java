@@ -11,6 +11,7 @@ import com.github.pocmo.sensordashboard.data.TagData;
 import com.github.pocmo.sensordashboard.events.BusProvider;
 import com.github.pocmo.sensordashboard.events.NewSensorEvent;
 import com.github.pocmo.sensordashboard.events.SensorUpdatedEvent;
+import com.github.pocmo.sensordashboard.events.TagAddedEvent;
 import com.github.pocmo.sensordashboard.shared.ClientPaths;
 import com.github.pocmo.sensordashboard.shared.DataMapKeys;
 import com.google.android.gms.common.ConnectionResult;
@@ -106,7 +107,7 @@ public class RemoteSensorManager {
     public synchronized void addTag(String pTagName) {
         TagData tag = new TagData(pTagName, System.currentTimeMillis());
 
-        BusProvider.postOnMainThread(tag);
+        BusProvider.postOnMainThread(new TagAddedEvent(tag));
     }
 
     private boolean validateConnection() {

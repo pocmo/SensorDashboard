@@ -170,6 +170,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Subscribe
+    public void onNewTagEvent(final TagAddedEvent pEvent) {
+        Toast.makeText(this, "Tag Event!\n" + pEvent.getTag().getTagName(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Subscribe
     public void onNewSensorEvent(final NewSensorEvent event) {
         ((ScreenSlidePagerAdapter) pager.getAdapter()).addNewSensor(event.getSensor());
         pager.getAdapter().notifyDataSetChanged();

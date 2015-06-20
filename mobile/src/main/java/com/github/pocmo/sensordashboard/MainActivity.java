@@ -2,6 +2,7 @@ package com.github.pocmo.sensordashboard;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -18,18 +20,26 @@ import android.widget.Toast;
 import com.github.pocmo.sensordashboard.data.Sensor;
 import com.github.pocmo.sensordashboard.events.BusProvider;
 import com.github.pocmo.sensordashboard.events.NewSensorEvent;
+import com.github.pocmo.sensordashboard.events.TagAddedEvent;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.Wearable;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private RemoteSensorManager remoteSensorManager;
 
     Toolbar mToolbar;
 
     private ViewPager pager;
     private View emptyState;
+    private NavigationView mNavigationView;
+    private Menu mNavigationViewMenu;
+    private List<Node> mNodes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         emptyState = findViewById(R.id.empty_state);
+
+        mNavigationView = (NavigationView) findViewById(R.id.navView);
+        mNavigationView.setNavigationItemSelectedListener(this);
+        mNavigationViewMenu = mNavigationView.getMenu();
 
         initToolbar();
         initViewPager();
@@ -132,6 +146,25 @@ public class MainActivity extends AppCompatActivity {
 
         remoteSensorManager.startMeasurement();
 
+        mNavigationViewMenu.clear();
+        remoteSensorManager.getNodes(new ResultCallback<NodeApi.GetConnectedNodesResult>() {
+            @Override
+            public void onResult(final NodeApi.GetConnectedNodesResult pGetConnectedNodesResult) {
+                mNodes = pGetConnectedNodesResult.getNodes();
+                for (Node node : mNodes) {
+                    SubMenu menu = mNavigationViewMenu.addSubMenu(node.getDisplayName());
+
+                    MenuItem item = menu.add("15 sensors");
+                    if (node.getDisplayName().startsWith("G")) {
+                        item.setChecked(true);
+                        item.setCheckable(true);
+                    } else {
+                        item.setChecked(false);
+                        item.setCheckable(false);
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -140,6 +173,12 @@ public class MainActivity extends AppCompatActivity {
         BusProvider.getInstance().unregister(this);
 
         remoteSensorManager.stopMeasurement();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(final MenuItem pMenuItem) {
+        Toast.makeText(this, "Device: " + pMenuItem.getTitle(), Toast.LENGTH_SHORT).show();
+        return false;
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {

@@ -20,6 +20,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
@@ -177,6 +178,10 @@ public class RemoteSensorManager {
         });
     }
 
+    public void getNodes(ResultCallback<NodeApi.GetConnectedNodesResult> pCallback) {
+        Wearable.NodeApi.getConnectedNodes(googleApiClient).setResultCallback(pCallback);
+    }
+
     private void controlMeasurementInBackground(final String path) {
         if (validateConnection()) {
             List<Node> nodes = Wearable.NodeApi.getConnectedNodes(googleApiClient).await().getNodes();
@@ -184,6 +189,7 @@ public class RemoteSensorManager {
             Log.d(TAG, "Sending to nodes: " + nodes.size());
 
             for (Node node : nodes) {
+                Log.i(TAG, "add node " + node.getDisplayName());
                 Wearable.MessageApi.sendMessage(
                         googleApiClient, node.getId(), path, null
                 ).setResultCallback(new ResultCallback<MessageApi.SendMessageResult>() {

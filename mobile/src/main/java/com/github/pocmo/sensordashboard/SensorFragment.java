@@ -257,9 +257,24 @@ public class SensorFragment extends Fragment {
             DataEntry entry = mRealm.createObject(DataEntry.class);
             entry.setAndroidDevice(mAndroidId);
             entry.setTimestamp(event.getDataPoint().getTimestamp());
-            entry.setX(event.getDataPoint().getValues()[0]);
-            entry.setY(event.getDataPoint().getValues()[1]);
-            entry.setZ(event.getDataPoint().getValues()[2]);
+            if (event.getDataPoint().getValues().length > 0) {
+                entry.setX(event.getDataPoint().getValues()[0]);
+            } else {
+                entry.setX(0.0f);
+            }
+
+            if (event.getDataPoint().getValues().length > 1) {
+                entry.setY(event.getDataPoint().getValues()[1]);
+            } else {
+                entry.setY(0.0f);
+            }
+
+            if (event.getDataPoint().getValues().length > 2) {
+                entry.setZ(event.getDataPoint().getValues()[2]);
+            } else {
+                entry.setZ(0.0f);
+            }
+
             entry.setAccuracy(event.getDataPoint().getAccuracy());
             entry.setDatasource("Acc");
             entry.setDatatype(event.getSensor().getId());

@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,7 +22,7 @@ import com.squareup.otto.Subscribe;
 import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
     private RemoteSensorManager remoteSensorManager;
 
     Toolbar mToolbar;
@@ -41,6 +42,14 @@ public class MainActivity extends ActionBarActivity {
         initViewPager();
 
         remoteSensorManager = RemoteSensorManager.getInstance(this);
+
+        findViewById(R.id.tag_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RemoteSensorManager.getInstance(MainActivity.this).addTag("TEMP");
+            }
+        });
+
 
     }
 

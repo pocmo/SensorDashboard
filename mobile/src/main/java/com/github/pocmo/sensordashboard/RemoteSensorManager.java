@@ -7,6 +7,7 @@ import android.util.SparseArray;
 import com.github.pocmo.sensordashboard.data.Sensor;
 import com.github.pocmo.sensordashboard.data.SensorDataPoint;
 import com.github.pocmo.sensordashboard.data.SensorNames;
+import com.github.pocmo.sensordashboard.data.TagData;
 import com.github.pocmo.sensordashboard.events.BusProvider;
 import com.github.pocmo.sensordashboard.events.NewSensorEvent;
 import com.github.pocmo.sensordashboard.events.SensorUpdatedEvent;
@@ -100,6 +101,12 @@ public class RemoteSensorManager {
         sensor.addDataPoint(dataPoint);
 
         BusProvider.postOnMainThread(new SensorUpdatedEvent(sensor, dataPoint));
+    }
+
+    public synchronized void addTag(String pTagName) {
+        TagData tag = new TagData(pTagName, System.currentTimeMillis());
+
+        BusProvider.postOnMainThread(tag);
     }
 
     private boolean validateConnection() {

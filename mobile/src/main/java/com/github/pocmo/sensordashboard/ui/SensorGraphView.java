@@ -95,7 +95,9 @@ public class SensorGraphView extends View {
         invalidate();
     }
 
-    public void setNormalisedDataPoints(ArrayList<Float>[] normalisedDataPoints, ArrayList<Integer>[] dataPointsAccuracy, ArrayList<Long>[] dataPointsTimeStamps) {
+    public void setNormalisedDataPoints(ArrayList<Float>[] normalisedDataPoints, ArrayList<Integer>[] dataPointsAccuracy, ArrayList<Long>[] dataPointsTimeStamps, LinkedList<TagData> tags) {
+
+        this.tags = tags;
 
         this.dataPointsTimeStamps = dataPointsTimeStamps;
 

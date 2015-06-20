@@ -6,12 +6,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.github.pocmo.sensordashboard.data.Sensor;
@@ -44,14 +45,21 @@ public class MainActivity extends AppCompatActivity {
 
         remoteSensorManager = RemoteSensorManager.getInstance(this);
 
+        final EditText tagname = (EditText) findViewById(R.id.tagname);
+
         findViewById(R.id.tag_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RemoteSensorManager.getInstance(MainActivity.this).addTag("TEMP");
+                String tagnameText = "EMPTY";
+                if (!tagname.getText().toString().isEmpty()) {
+                    tagnameText = tagname.getText().toString();
+                }
+
+                RemoteSensorManager.getInstance(MainActivity.this).addTag(tagnameText);
             }
         });
 
-
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     private void initToolbar() {

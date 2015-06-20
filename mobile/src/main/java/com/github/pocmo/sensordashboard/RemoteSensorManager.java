@@ -25,6 +25,7 @@ import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -42,6 +43,8 @@ public class RemoteSensorManager {
     private ArrayList<Sensor> sensors;
     private SensorNames sensorNames;
     private GoogleApiClient googleApiClient;
+
+    private LinkedList<TagData> tags = new LinkedList<>();
 
     public static synchronized RemoteSensorManager getInstance(Context context) {
         if (instance == null) {
@@ -106,8 +109,14 @@ public class RemoteSensorManager {
 
     public synchronized void addTag(String pTagName) {
         TagData tag = new TagData(pTagName, System.currentTimeMillis());
+        this.tags.add(tag);
+
 
         BusProvider.postOnMainThread(new TagAddedEvent(tag));
+    }
+
+    public LinkedList<TagData> getTags() {
+        return (LinkedList<TagData>) tags.clone();
     }
 
     private boolean validateConnection() {
@@ -127,7 +136,9 @@ public class RemoteSensorManager {
                 filterBySensorIdInBackground(sensorId);
             }
         });
-    };
+    }
+
+    ;
 
     private void filterBySensorIdInBackground(final int sensorId) {
         Log.d(TAG, "filterBySensorId(" + sensorId + ")");

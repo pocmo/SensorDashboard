@@ -205,7 +205,7 @@ public class SensorFragment extends Fragment {
         }
 
 
-        this.sensorview.setNormalisedDataPoints(normalisedValues, accuracyValues, timestampValues);
+        this.sensorview.setNormalisedDataPoints(normalisedValues, accuracyValues, timestampValues, RemoteSensorManager.getInstance(getActivity()).getTags());
         this.sensorview.setZeroLine((0 - sensor.getMinValue()) / spread);
 
         this.sensorview.setMaxValueLabel(MessageFormat.format("{0,number,#}", sensor.getMaxValue()));

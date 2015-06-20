@@ -19,4 +19,5 @@
     <color name="graph_color_8">#FFcddc39</color>
     <color name="graph_color_9">#FFff9800</color>
     <color name="graph_color_info">#FF9e9e9e</color>
+    <color name="graph_color_tag">#AA000000</color>
 </resources>

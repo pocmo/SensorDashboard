@@ -9,7 +9,9 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.github.pocmo.sensordashboard.R;
+import com.github.pocmo.sensordashboard.data.TagData;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,9 +32,13 @@ public class SensorGraphView extends View {
     private Paint[] rectPaints = new Paint[9];
 
     private Paint infoPaint;
+    private Paint tagPaint;
 
-    private LinkedList<Float>[] normalisedDataPoints;
-    private LinkedList<Integer>[] dataPointsAccuracy;
+    private ArrayList<Float>[] normalisedDataPoints;
+    private ArrayList<Integer>[] dataPointsAccuracy;
+    private ArrayList<Long>[] dataPointsTimeStamps;
+
+    private LinkedList<TagData> tags = new LinkedList<>();
     private float zeroline = 0;
     private String maxValueLabel = "";
     private String minValueValue = "";
@@ -77,6 +83,10 @@ public class SensorGraphView extends View {
         infoPaint.setTextSize(48f);
         infoPaint.setAntiAlias(true);
 
+        tagPaint = new Paint();
+        tagPaint.setColor(res.getColor(R.color.graph_color_info));
+        tagPaint.setAntiAlias(true);
+
     }
 
 
@@ -85,7 +95,20 @@ public class SensorGraphView extends View {
         invalidate();
     }
 
-    public void setNormalisedDataPoints(LinkedList<Float>[] normalisedDataPoints, LinkedList<Integer>[] dataPointsAccuracy) {
+    public void setNormalisedDataPoints(ArrayList<Float>[] normalisedDataPoints, ArrayList<Integer>[] dataPointsAccuracy, ArrayList<Long>[] dataPointsTimeStamps) {
+
+        this.dataPointsTimeStamps = dataPointsTimeStamps;
+
+
+        for (int i = 0; i < this.dataPointsTimeStamps.length; ++i) {
+            if (this.dataPointsTimeStamps[i].size() > MAX_DATA_SIZE) {
+
+                List tmp = this.dataPointsTimeStamps[i].subList(this.dataPointsTimeStamps[i].size() - MAX_DATA_SIZE - 1, this.dataPointsTimeStamps[i].size() - 1);
+                this.dataPointsTimeStamps[i] = new ArrayList<>();
+                this.dataPointsTimeStamps[i].addAll(tmp);
+            }
+        }
+
 
         this.normalisedDataPoints = normalisedDataPoints;
 
@@ -93,7 +116,7 @@ public class SensorGraphView extends View {
             if (this.normalisedDataPoints[i].size() > MAX_DATA_SIZE) {
 
                 List tmp = this.normalisedDataPoints[i].subList(this.normalisedDataPoints[i].size() - MAX_DATA_SIZE - 1, this.normalisedDataPoints[i].size() - 1);
-                this.normalisedDataPoints[i] = new LinkedList<Float>();
+                this.normalisedDataPoints[i] = new ArrayList<>();
                 this.normalisedDataPoints[i].addAll(tmp);
             }
         }
@@ -105,7 +128,7 @@ public class SensorGraphView extends View {
             if (this.dataPointsAccuracy[i].size() > MAX_DATA_SIZE) {
 
                 List tmp = this.dataPointsAccuracy[i].subList(this.dataPointsAccuracy[i].size() - MAX_DATA_SIZE - 1, this.dataPointsAccuracy[i].size() - 1);
-                this.dataPointsAccuracy[i] = new LinkedList<Integer>();
+                this.dataPointsAccuracy[i] = new ArrayList<>();
                 this.dataPointsAccuracy[i].addAll(tmp);
             }
         }
@@ -114,7 +137,7 @@ public class SensorGraphView extends View {
         for (int i = 0; i < this.dataPointsAccuracy.length; ++i) {
 
 
-            LinkedList<Integer> tmp = new LinkedList<Integer>();
+            ArrayList<Integer> tmp = new ArrayList<>();
             for (Integer integer : this.dataPointsAccuracy[i]) {
 
                 tmp.add(dataPointAccuracyToDotSize(integer));
@@ -140,22 +163,38 @@ public class SensorGraphView extends View {
         this.zeroline = zeroline;
     }
 
-    public void addNewDataPoint(float point, int accuracy, int index) {
+    public void addNewTag(TagData tagData) {
+        this.tags.add(tagData);
+
+        // allow max / 2 tags... that's probably enough
+        if (this.tags.size() > MAX_DATA_SIZE / 2) {
+            this.tags.removeFirst();
+        }
+    }
+
+    public void addNewDataPoint(float point, int accuracy, int index, long timestamp) {
         if (index >= normalisedDataPoints.length) {
             throw new ArrayIndexOutOfBoundsException("index too large!!");
         }
 
+        this.dataPointsTimeStamps[index].add(timestamp);
+
+        if (this.dataPointsTimeStamps[index].size() > MAX_DATA_SIZE) {
+            this.dataPointsTimeStamps[index].remove(0);
+        }
+
+
         this.normalisedDataPoints[index].add(point);
 
         if (this.normalisedDataPoints[index].size() > MAX_DATA_SIZE) {
-            this.normalisedDataPoints[index].removeFirst();
+            this.normalisedDataPoints[index].remove(0);
         }
 
 
         this.dataPointsAccuracy[index].add(dataPointAccuracyToDotSize(accuracy));
 
         if (this.dataPointsAccuracy[index].size() > MAX_DATA_SIZE) {
-            this.dataPointsAccuracy[index].removeFirst();
+            this.dataPointsAccuracy[index].remove(0);
         }
 
 
@@ -207,7 +246,8 @@ public class SensorGraphView extends View {
 
         int pointSpan = width / maxValues;
 
-
+        boolean firstSensorDrawn = true;
+        long previousTimeStamp = -1;
         float previousX = -1;
         float previousY = -1;
         for (int i = 0; i < this.normalisedDataPoints.length; ++i) {
@@ -221,6 +261,7 @@ public class SensorGraphView extends View {
             }
             int currentX = 0;//width - pointSpan;
             int index = 0;
+            int lastDrawnTagIndex = -1;
             for (Float dataPoint : this.normalisedDataPoints[i]) {
 
 
@@ -235,20 +276,53 @@ public class SensorGraphView extends View {
 
                 }
 
+
+                // draw tags here
+                if (firstSensorDrawn) {
+
+                    if (previousTimeStamp != -1) {
+                        int nextIndexToDraw = findStartingIndexForTag(previousTimeStamp / 1000000, dataPointsTimeStamps[i].get(index) / 1000000, lastDrawnTagIndex + 1);
+                        if (nextIndexToDraw != -1) {
+                            drawTag(canvas, this.tags.get(nextIndexToDraw), previousX + ((currentX - previousX) / 2));
+                            lastDrawnTagIndex = nextIndexToDraw;
+                        }
+                    }
+                    previousTimeStamp = dataPointsTimeStamps[i].get(index);
+                }
+
                 previousX = currentX;
                 previousY = y;
 
                 currentX += pointSpan;
                 ++index;
             }
+
+
+            firstSensorDrawn = false;
             previousX = -1;
             previousY = -1;
 
 
         }
 
-
     }
 
+    private void drawTag(Canvas canvas, TagData tag, float x) {
+        canvas.drawRect(x - 3, 0 + 1, x + 3, canvas.getHeight() - 1, tagPaint);
+    }
+
+
+    private int findStartingIndexForTag(long startTimestamp, long endTimestamp, int startIndex) {
+
+        for (int i = startIndex; i < this.tags.size(); ++i) {
+            if (this.tags.get(i).getTimestamp() > startTimestamp && this.tags.get(i).getTimestamp() <= endTimestamp) {
+                return i;
+            }
+
+
+        }
+
+        return -1;
+    }
 
 }

@@ -16,10 +16,12 @@ import com.github.pocmo.sensordashboard.data.SensorDataPoint;
 import com.github.pocmo.sensordashboard.events.BusProvider;
 import com.github.pocmo.sensordashboard.events.SensorRangeEvent;
 import com.github.pocmo.sensordashboard.events.SensorUpdatedEvent;
+import com.github.pocmo.sensordashboard.events.TagAddedEvent;
 import com.github.pocmo.sensordashboard.ui.SensorGraphView;
 import com.squareup.otto.Subscribe;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 
@@ -180,12 +182,15 @@ public class SensorFragment extends Fragment {
         }
 
 
-        LinkedList<Float>[] normalisedValues = new LinkedList[dataPoints.getFirst().getValues().length];
-        LinkedList<Integer>[] accuracyValues = new LinkedList[dataPoints.getFirst().getValues().length];
+        ArrayList<Float>[] normalisedValues = new ArrayList[dataPoints.getFirst().getValues().length];
+        ArrayList<Integer>[] accuracyValues = new ArrayList[dataPoints.getFirst().getValues().length];
+        ArrayList<Long>[] timestampValues = new ArrayList[dataPoints.getFirst().getValues().length];
+
 
         for (int i = 0; i < normalisedValues.length; ++i) {
-            normalisedValues[i] = new LinkedList<Float>();
-            accuracyValues[i] = new LinkedList<Integer>();
+            normalisedValues[i] = new ArrayList<>();
+            accuracyValues[i] = new ArrayList<>();
+            timestampValues[i] = new ArrayList<>();
         }
 
 
@@ -195,11 +200,12 @@ public class SensorFragment extends Fragment {
                 float normalised = (dataPoint.getValues()[i] - sensor.getMinValue()) / spread;
                 normalisedValues[i].add(normalised);
                 accuracyValues[i].add(dataPoint.getAccuracy());
+                timestampValues[i].add(dataPoint.getTimestamp());
             }
         }
 
 
-        this.sensorview.setNormalisedDataPoints(normalisedValues, accuracyValues);
+        this.sensorview.setNormalisedDataPoints(normalisedValues, accuracyValues, timestampValues);
         this.sensorview.setZeroLine((0 - sensor.getMinValue()) / spread);
 
         this.sensorview.setMaxValueLabel(MessageFormat.format("{0,number,#}", sensor.getMaxValue()));
@@ -225,6 +231,12 @@ public class SensorFragment extends Fragment {
         BusProvider.getInstance().unregister(this);
     }
 
+
+    @Subscribe
+    public void onTagAddedEvent(TagAddedEvent event) {
+        this.sensorview.addNewTag(event.getTag());
+    }
+
     @Subscribe
     public void onSensorUpdatedEvent(SensorUpdatedEvent event) {
         if (event.getSensor().getId() == this.sensor.getId()) {
@@ -232,7 +244,7 @@ public class SensorFragment extends Fragment {
 
             for (int i = 0; i < event.getDataPoint().getValues().length; ++i) {
                 float normalised = (event.getDataPoint().getValues()[i] - sensor.getMinValue()) / spread;
-                this.sensorview.addNewDataPoint(normalised, event.getDataPoint().getAccuracy(), i);
+                this.sensorview.addNewDataPoint(normalised, event.getDataPoint().getAccuracy(), i, event.getDataPoint().getTimestamp());
             }
         }
     }

@@ -249,7 +249,7 @@ public class SensorService extends Service implements SensorEventListener {
         if (mSensorManager != null) {
             mSensorManager.unregisterListener(this);
         }
-        if (!mScheduler.isTerminated()) {
+        if (mScheduler != null && !mScheduler.isTerminated()) {
             mScheduler.shutdown();
         }
     }

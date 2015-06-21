@@ -1,8 +1,8 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                        xmlns:app="http://schemas.android.com/apk/res-auto"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:fitsSystemWindows="false">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false">
 
     <!-- Your normal content view -->
     <LinearLayout
@@ -18,7 +18,7 @@
             android:elevation="8dp"
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -28,7 +28,7 @@
             <android.support.v4.view.ViewPager
                 android:id="@+id/pager"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/empty_state"
@@ -38,7 +38,7 @@
                 android:drawableTop="@drawable/large_bw"
                 android:gravity="center"
                 android:text="Waiting for sensor input from a wearable.."
-                android:textSize="24sp"/>
+                android:textSize="24sp" />
 
         </FrameLayout>
 
@@ -50,14 +50,23 @@
             android:orientation="horizontal"
             android:padding="8dp">
 
-            <EditText
-                android:id="@+id/tagname"
+
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="8dp"
                 android:layout_weight="1"
-                android:hint="tag name"/>
+                android:hint="tag name">
+
+                <EditText
+                    android:id="@+id/tagname"
+                    android:hint="tag name"
+                    android:singleLine="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </android.support.design.widget.TextInputLayout>
 
             <Button
                 android:id="@+id/tag_button"
@@ -65,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="8dp"
-                android:text="tag"/>
+                android:text="tag" />
 
 
         </LinearLayout>
@@ -79,6 +88,6 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:headerLayout="@layout/drawer_layout"/>
+        app:headerLayout="@layout/drawer_layout" />
 
 </android.support.v4.widget.DrawerLayout>

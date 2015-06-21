@@ -9,9 +9,6 @@
     </style>
 
 
-    <style name="risedview">
-    </style>
-
     <style name="legend_view">
         <item name="android:clickable">true</item>
         <item name="android:background">@drawable/button_bg</item>
@@ -28,6 +25,5 @@
         <item name="android:textColor">@color/colorText</item>
         <item name="android:textSize">16sp</item>
     </style>
-
 
 </resources>

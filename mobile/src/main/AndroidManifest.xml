@@ -32,6 +32,7 @@
 
         <activity
             android:name="com.github.pocmo.sensordashboard.ui.ExportActivity"
+            android:parentActivityName=".MainActivity"
             android:label="@string/action_export">
         </activity>
 

@@ -1,22 +1,26 @@
 package com.github.pocmo.sensordashboard.ui;
 
-import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
 import com.github.pocmo.sensordashboard.R;
+import com.github.pocmo.sensordashboard.RemoteSensorManager;
+import com.github.pocmo.sensordashboard.data.TagData;
 import com.github.pocmo.sensordashboard.database.DataEntry;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -24,7 +28,7 @@ import java.util.Locale;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class ExportActivity extends Activity {
+public class ExportActivity extends AppCompatActivity {
     private Realm mRealm;
 
     @Override
@@ -33,22 +37,21 @@ public class ExportActivity extends Activity {
 
         setContentView(R.layout.activity_export);
 
+        setSupportActionBar((Toolbar) findViewById(R.id.my_awesome_toolbar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        setTitle("Export Data");
         Button exportButton = (Button) findViewById(R.id.exportButton);
         exportButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
-                        final Handler handler = new Handler();  //Optional. Define as a variable in your activity.
+
 
                         Runnable r = new Runnable() {
                             @Override
                             public void run() {
-                                // your code here
-                                handler.post(new Runnable() {
-                                    public void run() {
-                                        exportFile();
-                                    }
-                                });
+                                exportFile();
                             }
                         };
 
@@ -59,15 +62,53 @@ public class ExportActivity extends Activity {
 
         );
 
+
+        findViewById(R.id.exportTagsButton).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+
+                        Runnable r = new Runnable() {
+                            @Override
+                            public void run() {
+                                exportTagsFile();
+                            }
+                        };
+
+                        Thread t = new Thread(r);
+                        t.start();
+                    }
+                }
+
+        );
+
+
         Button deleteButton = (Button) findViewById(R.id.deleteButton);
         deleteButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
-                        deleteData();
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                deleteData();
+                            }
+                        }).start();
+
                     }
                 }
         );
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void deleteData() {
@@ -115,31 +156,85 @@ public class ExportActivity extends Activity {
             FileWriter filewriter = new FileWriter(logfile);
             BufferedWriter bw = new BufferedWriter(filewriter);
 
-            String TestString = "";
 
             // Write the string to the file
             for (int i = 1; i < total_row; i++) {
-                TestString = result.get(i).getAndroidDevice().toString();
-                TestString += " ,";
-                TestString += String.valueOf(result.get(i).getTimestamp());
-                TestString += " ,";
-                TestString += String.valueOf(result.get(i).getX());
-                TestString += " ,";
-                TestString += String.valueOf(result.get(i).getY());
-                TestString += " ,";
-                TestString += String.valueOf(result.get(i).getZ());
-                TestString += " ,";
-                TestString += String.valueOf(result.get(i).getAccuracy());
-                TestString += " ,";
-                TestString += String.valueOf(result.get(i).getDatasource());
-                TestString += " ,";
-                TestString += String.valueOf(result.get(i).getDatatype());
-                TestString += "\n";
-                bw.write(TestString);
+                StringBuffer sb = new StringBuffer(result.get(i).getAndroidDevice().toString());
+                sb.append(" ,");
+                sb.append(String.valueOf(result.get(i).getTimestamp()));
+                sb.append(" ,");
+                sb.append(String.valueOf(result.get(i).getX()));
+                sb.append(" ,");
+                sb.append(String.valueOf(result.get(i).getY()));
+                sb.append(" ,");
+                sb.append(String.valueOf(result.get(i).getZ()));
+                sb.append(" ,");
+                sb.append(String.valueOf(result.get(i).getAccuracy()));
+                sb.append(" ,");
+                sb.append(String.valueOf(result.get(i).getDatasource()));
+                sb.append(" ,");
+                sb.append(String.valueOf(result.get(i).getDatatype()));
+                sb.append("\n");
+                bw.write(sb.toString());
             }
             bw.flush();
             bw.close();
-            Log.e("SensorDashbaord", "export finished!");
+
+
+            Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+            emailIntent.setType("*/*");
+
+            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+                    "SensorDashboard data export");
+            emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(logfile));
+            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+
+
+            Log.i("SensorDashbaord", "export finished!");
+        } catch (IOException ioe) {
+            Log.e("SensorDashbaord", "IOException while writing Logfile");
+        }
+    }
+
+
+    private void exportTagsFile() {
+        mRealm = Realm.getInstance(this);
+
+        final String fileprefix = "export_tags_";
+        final String date = new SimpleDateFormat("yyyyMMdd-HHmmss", Locale.getDefault()).format(new Date());
+        final String filename = String.format("%s_%s.txt", fileprefix, date);
+
+        final String directory = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SensorDashboard";
+
+        final File logfile = new File(directory, filename);
+        final File logPath = logfile.getParentFile();
+
+        if (!logPath.isDirectory() && !logPath.mkdirs()) {
+            Log.e("SensorDashbaord", "Could not create directory for log files");
+        }
+
+        try {
+            FileWriter filewriter = new FileWriter(logfile);
+            BufferedWriter bw = new BufferedWriter(filewriter);
+
+            for (TagData tag : RemoteSensorManager.getInstance(this).getTags()) {
+
+                bw.write(tag.getTagName() + ", " + tag.getTimestamp() + "\n");
+            }
+            bw.flush();
+            bw.close();
+
+
+            Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+            emailIntent.setType("*/*");
+
+            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+                    "SensorDashboard data export");
+            emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(logfile));
+            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+
+
+            Log.i("SensorDashbaord", "export finished!");
         } catch (IOException ioe) {
             Log.e("SensorDashbaord", "IOException while writing Logfile");
         }

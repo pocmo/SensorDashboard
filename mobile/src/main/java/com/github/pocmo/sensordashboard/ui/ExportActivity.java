@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.github.pocmo.sensordashboard.R;
 import com.github.pocmo.sensordashboard.RemoteSensorManager;
@@ -30,12 +32,17 @@ import io.realm.RealmResults;
 
 public class ExportActivity extends AppCompatActivity {
     private Realm mRealm;
+    private ProgressBar dataProgressbar;
+    private ProgressBar tagProgressbar;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_export);
+
+        dataProgressbar = (ProgressBar) findViewById(R.id.export_progress);
+        tagProgressbar = (ProgressBar) findViewById(R.id.export_progress_tag);
 
         setSupportActionBar((Toolbar) findViewById(R.id.my_awesome_toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -138,7 +145,7 @@ public class ExportActivity extends AppCompatActivity {
         RealmResults<DataEntry> result = mRealm.where(DataEntry.class).findAll();
         final int total_row = result.size();
         final int total_col = 8;
-        Log.e("SensorDashboard", "total_row = " + total_row);
+        Log.i("SensorDashboard", "total_row = " + total_row);
         final String fileprefix = "export";
         final String date = new SimpleDateFormat("yyyyMMdd-HHmmss", Locale.getDefault()).format(new Date());
         final String filename = String.format("%s_%s.txt", fileprefix, date);
@@ -156,9 +163,25 @@ public class ExportActivity extends AppCompatActivity {
             FileWriter filewriter = new FileWriter(logfile);
             BufferedWriter bw = new BufferedWriter(filewriter);
 
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    dataProgressbar.setMax(total_row);
+                    dataProgressbar.setVisibility(View.VISIBLE);
+                    dataProgressbar.setProgress(0);
+                }
+            });
 
             // Write the string to the file
             for (int i = 1; i < total_row; i++) {
+                final int progress = i;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dataProgressbar.setProgress(progress);
+                    }
+                });
+
                 StringBuffer sb = new StringBuffer(result.get(i).getAndroidDevice().toString());
                 sb.append(" ,");
                 sb.append(String.valueOf(result.get(i).getTimestamp()));
@@ -179,6 +202,20 @@ public class ExportActivity extends AppCompatActivity {
             }
             bw.flush();
             bw.close();
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            dataProgressbar.setVisibility(View.GONE);
+                        }
+                    }, 1000);
+
+                }
+            });
 
 
             Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
@@ -213,17 +250,48 @@ public class ExportActivity extends AppCompatActivity {
             Log.e("SensorDashbaord", "Could not create directory for log files");
         }
 
+
         try {
             FileWriter filewriter = new FileWriter(logfile);
             BufferedWriter bw = new BufferedWriter(filewriter);
 
-            for (TagData tag : RemoteSensorManager.getInstance(this).getTags()) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    tagProgressbar.setMax(RemoteSensorManager.getInstance(ExportActivity.this).getTags().size());
+                    tagProgressbar.setVisibility(View.VISIBLE);
+                    tagProgressbar.setProgress(0);
+                }
+            });
 
+            int i = 0;
+            for (TagData tag : RemoteSensorManager.getInstance(this).getTags()) {
+                final int progress = i;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tagProgressbar.setProgress(progress);
+                    }
+                });
+                ++i;
                 bw.write(tag.getTagName() + ", " + tag.getTimestamp() + "\n");
             }
             bw.flush();
             bw.close();
 
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            tagProgressbar.setVisibility(View.GONE);
+                        }
+                    }, 1000);
+
+                }
+            });
 
             Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
             emailIntent.setType("*/*");

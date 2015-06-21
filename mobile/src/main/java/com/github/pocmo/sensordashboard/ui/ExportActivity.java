@@ -11,6 +11,7 @@ import android.widget.Button;
 import com.github.pocmo.sensordashboard.R;
 import com.github.pocmo.sensordashboard.database.DataEntry;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -97,7 +99,7 @@ public class ExportActivity extends Activity {
         final int total_col = 8;
         Log.e("SensorDashboard", "total_row = " + total_row);
         final String fileprefix = "export";
-        final String date = new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date());
+        final String date = new SimpleDateFormat("yyyyMMdd-HHmmss", Locale.getDefault()).format(new Date());
         final String filename = String.format("%s_%s.txt", fileprefix, date);
 
         final String directory = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SensorDashboard";
@@ -111,17 +113,13 @@ public class ExportActivity extends Activity {
 
         try {
             FileWriter filewriter = new FileWriter(logfile);
+            BufferedWriter bw = new BufferedWriter(filewriter);
 
             String TestString = "";
 
-            FileOutputStream fOut = openFileOutput(filename, MODE_WORLD_READABLE);
-
-            OutputStreamWriter osw = new OutputStreamWriter(fOut);
-
             // Write the string to the file
             for (int i = 1; i < total_row; i++) {
-
-                TestString += result.get(i).getAndroidDevice().toString();
+                TestString = result.get(i).getAndroidDevice().toString();
                 TestString += " ,";
                 TestString += String.valueOf(result.get(i).getTimestamp());
                 TestString += " ,";
@@ -137,10 +135,10 @@ public class ExportActivity extends Activity {
                 TestString += " ,";
                 TestString += String.valueOf(result.get(i).getDatatype());
                 TestString += "\n";
+                bw.write(TestString);
             }
-            filewriter.write(TestString);
-            filewriter.flush();
-            filewriter.close();
+            bw.flush();
+            bw.close();
             Log.e("SensorDashbaord", "export finished!");
         } catch (IOException ioe) {
             Log.e("SensorDashbaord", "IOException while writing Logfile");

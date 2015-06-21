@@ -8,9 +8,9 @@ android {
     defaultConfig {
         applicationId "com.github.pocmo.sensordashboard"
         minSdkVersion 20
-        targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion 22
+        versionCode 5
+        versionName "1.1"
     }
     buildTypes {
         release {
@@ -22,7 +22,7 @@ android {
 
 dependencies {
     compile 'com.google.android.support:wearable:1.1.0'
-    compile 'com.google.android.gms:play-services-wearable:7.3.0'
+    compile 'com.google.android.gms:play-services-wearable:7.5.0'
 
     compile project(':shared')
 }

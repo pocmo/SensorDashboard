@@ -12,7 +12,7 @@ public class Sensor {
     private static final int MAX_DATA_POINTS = 1000;
 
     private long id;
-    private String name;
+    public String name;
     private float minValue = Integer.MAX_VALUE;
     private float maxValue = Integer.MIN_VALUE;
 

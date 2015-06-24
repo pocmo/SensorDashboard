@@ -62,6 +62,8 @@ public class MainActivity extends ActionBarActivity {
 
             }
         });
+
+        remoteSensorManager.startMeasurement();
     }
 
 

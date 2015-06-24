@@ -107,8 +107,8 @@ public class SensorService extends Service implements SensorEventListener {
 
 
 
-        while(!started)
-        {
+//        while(!started)
+//        {
             // Register the listener
             if (mSensorManager != null) {
                 if (accelerometerSensor != null) {
@@ -274,36 +274,36 @@ public class SensorService extends Service implements SensorEventListener {
             }
 
 
-            if(!started)
-            {
-                Log.d(TAG, "Try again to find sensors");
-                 accelerometerSensor = mSensorManager.getDefaultSensor(SENS_ACCELEROMETER);
-                 ambientTemperatureSensor = mSensorManager.getDefaultSensor(SENS_AMBIENT_TEMPERATURE);
-                 gameRotationVectorSensor = mSensorManager.getDefaultSensor(SENS_GAME_ROTATION_VECTOR);
-                 geomagneticSensor = mSensorManager.getDefaultSensor(SENS_GEOMAGNETIC);
-                 gravitySensor = mSensorManager.getDefaultSensor(SENS_GRAVITY);
-                 gyroscopeSensor = mSensorManager.getDefaultSensor(SENS_GYROSCOPE);
-                 gyroscopeUncalibratedSensor = mSensorManager.getDefaultSensor(SENS_GYROSCOPE_UNCALIBRATED);
-                mHeartrateSensor = mSensorManager.getDefaultSensor(SENS_HEARTRATE);
-                 heartrateSamsungSensor = mSensorManager.getDefaultSensor(65562);
-                 lightSensor = mSensorManager.getDefaultSensor(SENS_LIGHT);
-                 linearAccelerationSensor = mSensorManager.getDefaultSensor(SENS_LINEAR_ACCELERATION);
-                 magneticFieldSensor = mSensorManager.getDefaultSensor(SENS_MAGNETIC_FIELD);
-                 magneticFieldUncalibratedSensor = mSensorManager.getDefaultSensor(SENS_MAGNETIC_FIELD_UNCALIBRATED);
-                 pressureSensor = mSensorManager.getDefaultSensor(SENS_PRESSURE);
-                 proximitySensor = mSensorManager.getDefaultSensor(SENS_PROXIMITY);
-                 humiditySensor = mSensorManager.getDefaultSensor(SENS_HUMIDITY);
-                 rotationVectorSensor = mSensorManager.getDefaultSensor(SENS_ROTATION_VECTOR);
-                 significantMotionSensor = mSensorManager.getDefaultSensor(SENS_SIGNIFICANT_MOTION);
-                 stepCounterSensor = mSensorManager.getDefaultSensor(SENS_STEP_COUNTER);
-                 stepDetectorSensor = mSensorManager.getDefaultSensor(SENS_STEP_DETECTOR);
+//            if(!started)
+//            {
+//                Log.d(TAG, "Try again to find sensors");
+//                 accelerometerSensor = mSensorManager.getDefaultSensor(SENS_ACCELEROMETER);
+//                 ambientTemperatureSensor = mSensorManager.getDefaultSensor(SENS_AMBIENT_TEMPERATURE);
+//                 gameRotationVectorSensor = mSensorManager.getDefaultSensor(SENS_GAME_ROTATION_VECTOR);
+//                 geomagneticSensor = mSensorManager.getDefaultSensor(SENS_GEOMAGNETIC);
+//                 gravitySensor = mSensorManager.getDefaultSensor(SENS_GRAVITY);
+//                 gyroscopeSensor = mSensorManager.getDefaultSensor(SENS_GYROSCOPE);
+//                 gyroscopeUncalibratedSensor = mSensorManager.getDefaultSensor(SENS_GYROSCOPE_UNCALIBRATED);
+//                mHeartrateSensor = mSensorManager.getDefaultSensor(SENS_HEARTRATE);
+//                 heartrateSamsungSensor = mSensorManager.getDefaultSensor(65562);
+//                 lightSensor = mSensorManager.getDefaultSensor(SENS_LIGHT);
+//                 linearAccelerationSensor = mSensorManager.getDefaultSensor(SENS_LINEAR_ACCELERATION);
+//                 magneticFieldSensor = mSensorManager.getDefaultSensor(SENS_MAGNETIC_FIELD);
+//                 magneticFieldUncalibratedSensor = mSensorManager.getDefaultSensor(SENS_MAGNETIC_FIELD_UNCALIBRATED);
+//                 pressureSensor = mSensorManager.getDefaultSensor(SENS_PRESSURE);
+//                 proximitySensor = mSensorManager.getDefaultSensor(SENS_PROXIMITY);
+//                 humiditySensor = mSensorManager.getDefaultSensor(SENS_HUMIDITY);
+//                 rotationVectorSensor = mSensorManager.getDefaultSensor(SENS_ROTATION_VECTOR);
+//                 significantMotionSensor = mSensorManager.getDefaultSensor(SENS_SIGNIFICANT_MOTION);
+//                 stepCounterSensor = mSensorManager.getDefaultSensor(SENS_STEP_COUNTER);
+//                 stepDetectorSensor = mSensorManager.getDefaultSensor(SENS_STEP_DETECTOR);
+//
+//            }
+//            else{
+//                Log.d(TAG, "Sensor found");
+//            }
 
-            }
-            else{
-                Log.d(TAG, "Sensor found");
-            }
-
-        }
+//        }
 
 
 

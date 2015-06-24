@@ -37,7 +37,7 @@ public class SensorFragment extends Fragment {
     private SensorGraphView sensorview;
     private float spread;
 
-    private boolean[] drawSensors = new boolean[20];
+    private boolean[] drawSensors = new boolean[SensorGraphView.NUM_DRAW_SENSOR];
 
     /**
      * Use this factory method to create a new instance of

@@ -12,7 +12,7 @@ public class Sensor {
     private static final int MAX_DATA_POINTS = 1000;
 
     private long id;
-    public String name;
+    private String name;
     private float minValue = Integer.MAX_VALUE;
     private float maxValue = Integer.MIN_VALUE;
 
@@ -60,7 +60,7 @@ public class Sensor {
         }
 
         if (newLimits) {
-            Log.d(TAG, "New range for sensor " + id + ": " + minValue + " - " + maxValue);
+            Log.v(TAG, "New range for sensor " + id + ": " + minValue + " - " + maxValue);
 
             BusProvider.postOnMainThread(new SensorRangeEvent(this));
         }

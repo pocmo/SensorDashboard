@@ -38,7 +38,9 @@ public class SensorGraphView extends View {
     private String maxValueLabel = "";
     private String minValueValue = "";
 
-    private boolean[] drawSensors = new boolean[20];
+    public static int NUM_DRAW_SENSOR=20;
+
+    private boolean[] drawSensors = new boolean[NUM_DRAW_SENSOR];
 
     public SensorGraphView(Context context, AttributeSet attrs) {
         super(context, attrs);

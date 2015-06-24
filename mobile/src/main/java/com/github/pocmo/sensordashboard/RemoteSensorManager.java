@@ -1,9 +1,14 @@
 package com.github.pocmo.sensordashboard;
 
 import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
 import android.util.SparseArray;
+import android.content.Context;
+import android.widget.Button;
 
+
+import com.github.pocmo.sensordashboard.data.DataRecord;
 import com.github.pocmo.sensordashboard.data.Sensor;
 import com.github.pocmo.sensordashboard.data.SensorDataPoint;
 import com.github.pocmo.sensordashboard.data.SensorNames;
@@ -22,7 +27,13 @@ import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,6 +51,9 @@ public class RemoteSensorManager {
     private ArrayList<Sensor> sensors;
     private SensorNames sensorNames;
     private GoogleApiClient googleApiClient;
+
+    private boolean is_recording=false;
+    private DataRecord data_record;
 
     public static synchronized RemoteSensorManager getInstance(Context context) {
         if (instance == null) {
@@ -94,12 +108,38 @@ public class RemoteSensorManager {
     public synchronized void addSensorData(int sensorType, int accuracy, long timestamp, float[] values) {
         Sensor sensor = getOrCreateSensor(sensorType);
 
+        Log.v(TAG, "Record sensor data " + sensorMapping.get(sensorType).getName() + " = " + Arrays.toString(values));
+
         // TODO: We probably want to pull sensor data point objects from a pool here
         SensorDataPoint dataPoint = new SensorDataPoint(timestamp, accuracy, values);
 
         sensor.addDataPoint(dataPoint);
 
         BusProvider.postOnMainThread(new SensorUpdatedEvent(sensor, dataPoint));
+
+
+
+        if(is_recording){
+            if(data_record==null){
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+                data_record=new DataRecord(timeStamp);
+
+
+
+
+            }
+            data_record.record_data(sensor, accuracy, timestamp, values);
+        }
+        else {
+            if(null != data_record){
+                data_record.flush_data();
+                data_record=null;
+            }
+        }
+
+
+
+
     }
 
     private boolean validateConnection() {
@@ -147,6 +187,9 @@ public class RemoteSensorManager {
                 controlMeasurementInBackground(ClientPaths.START_MEASUREMENT);
             }
         });
+
+
+
     }
 
     public void stopMeasurement() {
@@ -177,5 +220,9 @@ public class RemoteSensorManager {
         } else {
             Log.w(TAG, "No connection possible");
         }
+    }
+
+    public void set_is_recording(boolean input){
+        is_recording=input;
     }
 }

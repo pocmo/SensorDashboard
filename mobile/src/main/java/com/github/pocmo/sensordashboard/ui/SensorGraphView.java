@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.hardware.SensorManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.github.pocmo.sensordashboard.R;
@@ -37,7 +38,9 @@ public class SensorGraphView extends View {
     private String maxValueLabel = "";
     private String minValueValue = "";
 
-    private boolean[] drawSensors = new boolean[6];
+    public static int NUM_DRAW_SENSOR=20;
+
+    private boolean[] drawSensors = new boolean[NUM_DRAW_SENSOR];
 
     public SensorGraphView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -212,6 +215,9 @@ public class SensorGraphView extends View {
         float previousY = -1;
         for (int i = 0; i < this.normalisedDataPoints.length; ++i) {
 
+
+
+
             if (!drawSensors[i]) {
                 continue;
             }
@@ -227,13 +233,34 @@ public class SensorGraphView extends View {
                 float y = height - (height * dataPoint);
 
 
-                canvas.drawCircle(currentX, y, dataPointsAccuracy[i].get(index), rectPaints[i]);
+//                Log.d("Sensor Graph View", "The length of dataPointsAccuracy: " + Integer.toString(dataPointsAccuracy.length));
+//                Log.d("Sensor Graph View", "The length of rectPaints: " + Integer.toString(rectPaints.length));
 
 
-                if (previousX != -1 && previousY != -1) {
-                    canvas.drawLine(previousX, previousY, currentX, y, rectPaints[i]);
+                //////////////////////////////////////////////////////////////////////////////
+                /////////Here is a small patch that handle the case when the number of sensors is too large.
+                if(i>=rectPaints.length){
+                    canvas.drawCircle(currentX, y, dataPointsAccuracy[i].get(index), rectPaints[rectPaints.length-1]);
+
+                    if (previousX != -1 && previousY != -1) {
+                        canvas.drawLine(previousX, previousY, currentX, y, rectPaints[rectPaints.length-1]);
+
+                    }
 
                 }
+                else{
+                    canvas.drawCircle(currentX, y, dataPointsAccuracy[i].get(index), rectPaints[i]);
+
+                    if (previousX != -1 && previousY != -1) {
+                        canvas.drawLine(previousX, previousY, currentX, y, rectPaints[i]);
+
+                    }
+                }
+
+
+
+
+
 
                 previousX = currentX;
                 previousY = y;

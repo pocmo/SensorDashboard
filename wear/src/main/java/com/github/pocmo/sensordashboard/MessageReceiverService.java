@@ -48,7 +48,7 @@ public class MessageReceiverService extends WearableListenerService {
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
-        Log.d(TAG, "Received message: " + messageEvent.getPath());
+        Log.v(TAG, "Received message: " + messageEvent.getPath());
 
         if (messageEvent.getPath().equals(ClientPaths.START_MEASUREMENT)) {
             startService(new Intent(this, SensorService.class));

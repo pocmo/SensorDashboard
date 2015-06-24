@@ -85,7 +85,7 @@ public class DeviceClient {
         if (sensorType == filterId) {
             Log.i(TAG, "Sensor " + sensorType + " = " + Arrays.toString(values));
         } else {
-            Log.d(TAG, "Sensor " + sensorType + " = " + Arrays.toString(values));
+            Log.v(TAG, "Sensor " + sensorType + " = " + Arrays.toString(values));
         }
 
         PutDataMapRequest dataMap = PutDataMapRequest.create("/sensors/" + sensorType);

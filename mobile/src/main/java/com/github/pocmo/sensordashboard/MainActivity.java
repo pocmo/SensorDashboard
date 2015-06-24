@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.github.pocmo.sensordashboard.events.BusProvider;
 import com.github.pocmo.sensordashboard.events.NewSensorEvent;
 import com.squareup.otto.Subscribe;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -25,6 +27,7 @@ public class MainActivity extends ActionBarActivity {
 
     private ViewPager pager;
     private View emptyState;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,8 @@ public class MainActivity extends ActionBarActivity {
 
             }
         });
+
+        remoteSensorManager.startMeasurement();
     }
 
 
@@ -107,6 +112,16 @@ public class MainActivity extends ActionBarActivity {
         BusProvider.getInstance().unregister(this);
 
         remoteSensorManager.stopMeasurement();
+    }
+
+    public void startRecording(View view) {
+
+        remoteSensorManager.set_is_recording(true);
+    }
+
+    public void stopRecording(View view) {
+
+        remoteSensorManager.set_is_recording(false);
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {

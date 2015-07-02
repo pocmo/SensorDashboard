@@ -23,6 +23,8 @@ public class DeviceClient {
     private static final String TAG = "SensorDashboard/DeviceClient";
     private static final int CLIENT_CONNECTION_TIMEOUT = 15000;
 
+    private boolean is_filter_on=true;
+
     public static DeviceClient instance;
 
     public static DeviceClient getInstance(Context context) {
@@ -61,14 +63,19 @@ public class DeviceClient {
         long lastTimestamp = lastSensorData.get(sensorType);
         long timeAgo = t - lastTimestamp;
 
-        if (lastTimestamp != 0) {
-            if (filterId == sensorType && timeAgo < 100) {
-                return;
+        if (lastTimestamp != 0 ) {
+
+            if(timeAgo < 100){
+                return;// remove too frequent data sample
             }
 
-            if (filterId != sensorType && timeAgo < 3000) {
-                return;
+            if(timeAgo<3000){ //accept any data with long intervals
+                if(is_filter_on && filterId != sensorType){
+                    return;//filter out sensors with wrong types
+                }
+
             }
+
         }
 
         lastSensorData.put(sensorType, t);
@@ -117,5 +124,9 @@ public class DeviceClient {
                 }
             });
         }
+    }
+
+    public void set_filter_switch(boolean input_value){
+        is_filter_on=input_value;
     }
 }

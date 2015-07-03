@@ -3,7 +3,6 @@ package com.github.pocmo.sensordashboard;
 
 import android.app.Activity;
 import android.content.res.Resources;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
@@ -28,7 +27,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 
 /**
@@ -38,6 +36,7 @@ import io.realm.RealmResults;
  */
 public class SensorFragment extends Fragment {
 
+    private static final int SENSOR_TOOGLES = 6;
 
     private static final String ARG_PARAM1 = "param1";
     private long sensorId;
@@ -45,10 +44,13 @@ public class SensorFragment extends Fragment {
     private SensorGraphView sensorview;
     private float spread;
 
+
     private Realm mRealm;
     private String mAndroidId;
 
-    private boolean[] drawSensors = new boolean[6];
+
+    private boolean[] drawSensors = new boolean[SENSOR_TOOGLES];
+
 
     /**
      * Use this factory method to create a new instance of
@@ -103,77 +105,25 @@ public class SensorFragment extends Fragment {
         view.findViewById(R.id.legend6).setBackgroundColor(res.getColor(R.color.graph_color_6));
 
 
-// this could be better.. btu hey, it's a hackathon!
-        view.findViewById(R.id.legend1_container).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawSensors[0] = !drawSensors[0];
-                sensorview.setDrawSensors(drawSensors);
-                v.setSelected(drawSensors[0]);
-            }
-        });
+        String packageName = getActivity().getPackageName();
+        for (int i = 0; i < SENSOR_TOOGLES; i++) {
 
-        view.findViewById(R.id.legend2_container).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawSensors[1] = !drawSensors[1];
-                sensorview.setDrawSensors(drawSensors);
-                v.setSelected(drawSensors[1]);
-            }
-        });
+            // Setting click listener for toggles
+            int resourceId = res.getIdentifier("legend" + (i + 1) + "_container", "id", packageName);
+            final int finalI = i;
+            view.findViewById(resourceId).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    drawSensors[finalI] = !drawSensors[finalI];
+                    sensorview.setDrawSensors(drawSensors);
+                    v.setSelected(drawSensors[finalI]);
+                }
+            });
 
-
-        view.findViewById(R.id.legend3_container).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawSensors[2] = !drawSensors[2];
-                sensorview.setDrawSensors(drawSensors);
-                v.setSelected(drawSensors[2]);
-            }
-        });
-
-
-        view.findViewById(R.id.legend4_container).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawSensors[3] = !drawSensors[3];
-                sensorview.setDrawSensors(drawSensors);
-                v.setSelected(drawSensors[3]);
-            }
-        });
-
-
-        view.findViewById(R.id.legend5_container).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawSensors[4] = !drawSensors[4];
-                sensorview.setDrawSensors(drawSensors);
-                v.setSelected(drawSensors[4]);
-            }
-        });
-
-
-        view.findViewById(R.id.legend6_container).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawSensors[5] = !drawSensors[5];
-                sensorview.setDrawSensors(drawSensors);
-                v.setSelected(drawSensors[5]);
-            }
-        });
-
-        view.findViewById(R.id.legend1_container).setSelected(true);
-        view.findViewById(R.id.legend2_container).setSelected(true);
-        view.findViewById(R.id.legend3_container).setSelected(true);
-        view.findViewById(R.id.legend4_container).setSelected(true);
-        view.findViewById(R.id.legend5_container).setSelected(true);
-        view.findViewById(R.id.legend6_container).setSelected(true);
-
-
-        for (int i = 0; i < drawSensors.length; ++i) {
+            // Setting toggles as selected
+            view.findViewById(resourceId).setSelected(true);
             drawSensors[i] = true;
         }
-
 
         sensorview.setDrawSensors(drawSensors);
 

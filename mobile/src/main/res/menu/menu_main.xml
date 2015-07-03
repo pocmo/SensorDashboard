@@ -7,4 +7,10 @@
         android:title="@string/action_about"
         android:orderInCategory="100"
         app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_export"
+        android:title="@string/action_export"
+        android:orderInCategory="200"
+        app:showAsAction="never"/>
 </menu>

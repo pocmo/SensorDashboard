@@ -7,9 +7,11 @@ import android.util.SparseArray;
 import com.github.pocmo.sensordashboard.data.Sensor;
 import com.github.pocmo.sensordashboard.data.SensorDataPoint;
 import com.github.pocmo.sensordashboard.data.SensorNames;
+import com.github.pocmo.sensordashboard.data.TagData;
 import com.github.pocmo.sensordashboard.events.BusProvider;
 import com.github.pocmo.sensordashboard.events.NewSensorEvent;
 import com.github.pocmo.sensordashboard.events.SensorUpdatedEvent;
+import com.github.pocmo.sensordashboard.events.TagAddedEvent;
 import com.github.pocmo.sensordashboard.shared.ClientPaths;
 import com.github.pocmo.sensordashboard.shared.DataMapKeys;
 import com.google.android.gms.common.ConnectionResult;
@@ -18,11 +20,13 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,6 +44,8 @@ public class RemoteSensorManager {
     private ArrayList<Sensor> sensors;
     private SensorNames sensorNames;
     private GoogleApiClient googleApiClient;
+
+    private LinkedList<TagData> tags = new LinkedList<>();
 
     public static synchronized RemoteSensorManager getInstance(Context context) {
         if (instance == null) {
@@ -102,6 +108,18 @@ public class RemoteSensorManager {
         BusProvider.postOnMainThread(new SensorUpdatedEvent(sensor, dataPoint));
     }
 
+    public synchronized void addTag(String pTagName) {
+        TagData tag = new TagData(pTagName, System.currentTimeMillis());
+        this.tags.add(tag);
+
+
+        BusProvider.postOnMainThread(new TagAddedEvent(tag));
+    }
+
+    public LinkedList<TagData> getTags() {
+        return (LinkedList<TagData>) tags.clone();
+    }
+
     private boolean validateConnection() {
         if (googleApiClient.isConnected()) {
             return true;
@@ -119,7 +137,9 @@ public class RemoteSensorManager {
                 filterBySensorIdInBackground(sensorId);
             }
         });
-    };
+    }
+
+    ;
 
     private void filterBySensorIdInBackground(final int sensorId) {
         Log.d(TAG, "filterBySensorId(" + sensorId + ")");
@@ -158,6 +178,10 @@ public class RemoteSensorManager {
         });
     }
 
+    public void getNodes(ResultCallback<NodeApi.GetConnectedNodesResult> pCallback) {
+        Wearable.NodeApi.getConnectedNodes(googleApiClient).setResultCallback(pCallback);
+    }
+
     private void controlMeasurementInBackground(final String path) {
         if (validateConnection()) {
             List<Node> nodes = Wearable.NodeApi.getConnectedNodes(googleApiClient).await().getNodes();
@@ -165,6 +189,7 @@ public class RemoteSensorManager {
             Log.d(TAG, "Sending to nodes: " + nodes.size());
 
             for (Node node : nodes) {
+                Log.i(TAG, "add node " + node.getDisplayName());
                 Wearable.MessageApi.sendMessage(
                         googleApiClient, node.getId(), path, null
                 ).setResultCallback(new ResultCallback<MessageApi.SendMessageResult>() {

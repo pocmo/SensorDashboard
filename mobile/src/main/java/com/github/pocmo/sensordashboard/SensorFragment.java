@@ -4,6 +4,7 @@ package com.github.pocmo.sensordashboard;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,14 +14,19 @@ import android.widget.TextView;
 
 import com.github.pocmo.sensordashboard.data.Sensor;
 import com.github.pocmo.sensordashboard.data.SensorDataPoint;
+import com.github.pocmo.sensordashboard.database.DataEntry;
 import com.github.pocmo.sensordashboard.events.BusProvider;
 import com.github.pocmo.sensordashboard.events.SensorRangeEvent;
 import com.github.pocmo.sensordashboard.events.SensorUpdatedEvent;
+import com.github.pocmo.sensordashboard.events.TagAddedEvent;
 import com.github.pocmo.sensordashboard.ui.SensorGraphView;
 import com.squareup.otto.Subscribe;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.LinkedList;
+
+import io.realm.Realm;
 
 
 /**
@@ -38,7 +44,13 @@ public class SensorFragment extends Fragment {
     private SensorGraphView sensorview;
     private float spread;
 
+
+    private Realm mRealm;
+    private String mAndroidId;
+
+
     private boolean[] drawSensors = new boolean[SENSOR_TOOGLES];
+
 
     /**
      * Use this factory method to create a new instance of
@@ -94,7 +106,7 @@ public class SensorFragment extends Fragment {
 
 
         String packageName = getActivity().getPackageName();
-        for(int i = 0; i < SENSOR_TOOGLES; i++){
+        for (int i = 0; i < SENSOR_TOOGLES; i++) {
 
             // Setting click listener for toggles
             int resourceId = res.getIdentifier("legend" + (i + 1) + "_container", "id", packageName);
@@ -129,12 +141,15 @@ public class SensorFragment extends Fragment {
         }
 
 
-        LinkedList<Float>[] normalisedValues = new LinkedList[dataPoints.getFirst().getValues().length];
-        LinkedList<Integer>[] accuracyValues = new LinkedList[dataPoints.getFirst().getValues().length];
+        ArrayList<Float>[] normalisedValues = new ArrayList[dataPoints.getFirst().getValues().length];
+        ArrayList<Integer>[] accuracyValues = new ArrayList[dataPoints.getFirst().getValues().length];
+        ArrayList<Long>[] timestampValues = new ArrayList[dataPoints.getFirst().getValues().length];
+
 
         for (int i = 0; i < normalisedValues.length; ++i) {
-            normalisedValues[i] = new LinkedList<Float>();
-            accuracyValues[i] = new LinkedList<Integer>();
+            normalisedValues[i] = new ArrayList<>();
+            accuracyValues[i] = new ArrayList<>();
+            timestampValues[i] = new ArrayList<>();
         }
 
 
@@ -144,11 +159,12 @@ public class SensorFragment extends Fragment {
                 float normalised = (dataPoint.getValues()[i] - sensor.getMinValue()) / spread;
                 normalisedValues[i].add(normalised);
                 accuracyValues[i].add(dataPoint.getAccuracy());
+                timestampValues[i].add(dataPoint.getTimestamp());
             }
         }
 
 
-        this.sensorview.setNormalisedDataPoints(normalisedValues, accuracyValues);
+        this.sensorview.setNormalisedDataPoints(normalisedValues, accuracyValues, timestampValues, RemoteSensorManager.getInstance(getActivity()).getTags());
         this.sensorview.setZeroLine((0 - sensor.getMinValue()) / spread);
 
         this.sensorview.setMaxValueLabel(MessageFormat.format("{0,number,#}", sensor.getMaxValue()));
@@ -160,6 +176,9 @@ public class SensorFragment extends Fragment {
     public void onResume() {
         super.onResume();
         initialiseSensorData();
+
+        mRealm = Realm.getInstance(getActivity());
+        mAndroidId = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
     @Override
@@ -174,14 +193,46 @@ public class SensorFragment extends Fragment {
         BusProvider.getInstance().unregister(this);
     }
 
+
+    @Subscribe
+    public void onTagAddedEvent(TagAddedEvent event) {
+        this.sensorview.addNewTag(event.getTag());
+    }
+
     @Subscribe
     public void onSensorUpdatedEvent(SensorUpdatedEvent event) {
         if (event.getSensor().getId() == this.sensor.getId()) {
 
+            mRealm.beginTransaction();
+            DataEntry entry = mRealm.createObject(DataEntry.class);
+            entry.setAndroidDevice(mAndroidId);
+            entry.setTimestamp(event.getDataPoint().getTimestamp());
+            if (event.getDataPoint().getValues().length > 0) {
+                entry.setX(event.getDataPoint().getValues()[0]);
+            } else {
+                entry.setX(0.0f);
+            }
+
+            if (event.getDataPoint().getValues().length > 1) {
+                entry.setY(event.getDataPoint().getValues()[1]);
+            } else {
+                entry.setY(0.0f);
+            }
+
+            if (event.getDataPoint().getValues().length > 2) {
+                entry.setZ(event.getDataPoint().getValues()[2]);
+            } else {
+                entry.setZ(0.0f);
+            }
+
+            entry.setAccuracy(event.getDataPoint().getAccuracy());
+            entry.setDatasource("Acc");
+            entry.setDatatype(event.getSensor().getId());
+            mRealm.commitTransaction();
 
             for (int i = 0; i < event.getDataPoint().getValues().length; ++i) {
                 float normalised = (event.getDataPoint().getValues()[i] - sensor.getMinValue()) / spread;
-                this.sensorview.addNewDataPoint(normalised, event.getDataPoint().getAccuracy(), i);
+                this.sensorview.addNewDataPoint(normalised, event.getDataPoint().getAccuracy(), i, event.getDataPoint().getTimestamp());
             }
         }
     }

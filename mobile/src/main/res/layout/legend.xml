@@ -1,35 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:tools="http://schemas.android.com/tools"
-       xmlns:android="http://schemas.android.com/apk/res/android"
-       tools:showIn="@layout/fragment_sensor">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="@layout/fragment_sensor">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/legend1_container"
             style="@style/legend_view"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <View
+                android:id="@+id/legend1"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:id="@+id/legend1"
-                android:background="#FFFFFFFF"
-                style="@style/risedview"/>
+                android:background="#FFFFFFFF" />
 
             <TextView
-                android:layout_marginLeft="8dp"
-                android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sensor 1"/>
+                android:layout_marginLeft="8dp"
+                android:text="Sensor 1"
+                android:textSize="16sp" />
         </LinearLayout>
 
 
@@ -37,23 +35,22 @@
             android:id="@+id/legend2_container"
             style="@style/legend_view"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <View
-                android:layout_width="24dp"
-                android:layout_height="24dp"
                 android:id="@+id/legend2"
-                android:background="#FFFFFFFF"
-                style="@style/risedview"/>
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="#FFFFFFFF" />
 
             <TextView
-                android:layout_marginLeft="8dp"
-                android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sensor 2"/>
+                android:layout_marginLeft="8dp"
+                android:text="Sensor 2"
+                android:textSize="16sp" />
         </LinearLayout>
 
 
@@ -62,55 +59,51 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            style="@style/legend_view"
             android:id="@+id/legend3_container"
+            style="@style/legend_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <View
+                android:id="@+id/legend3"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:id="@+id/legend3"
-                android:background="#FFFFFFFF"
-                style="@style/risedview"
-                />
+                android:background="#FFFFFFFF" />
 
             <TextView
-                android:layout_marginLeft="8dp"
-                android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sensor 3"/>
+                android:layout_marginLeft="8dp"
+                android:text="Sensor 3"
+                android:textSize="16sp" />
         </LinearLayout>
 
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            style="@style/legend_view"
             android:id="@+id/legend4_container"
+            style="@style/legend_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <View
+                android:id="@+id/legend4"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:id="@+id/legend4"
-                android:background="#FFFFFFFF"
-                style="@style/risedview"/>
+                android:background="#FFFFFFFF" />
 
             <TextView
-                android:layout_marginLeft="8dp"
-                android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sensor 4"/>
+                android:layout_marginLeft="8dp"
+                android:text="Sensor 4"
+                android:textSize="16sp" />
         </LinearLayout>
 
 
@@ -125,50 +118,48 @@
         >
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            style="@style/legend_view"
             android:id="@+id/legend5_container"
+            style="@style/legend_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <View
+                android:id="@+id/legend5"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:id="@+id/legend5"
-                android:background="#FFFFFFFF"
-                style="@style/risedview"/>
+                android:background="#FFFFFFFF" />
 
             <TextView
-                android:layout_marginLeft="8dp"
-                android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sensor 5"/>
+                android:layout_marginLeft="8dp"
+                android:text="Sensor 5"
+                android:textSize="16sp" />
         </LinearLayout>
 
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            style="@style/legend_view"
             android:id="@+id/legend6_container"
+            style="@style/legend_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <View
+                android:id="@+id/legend6"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:id="@+id/legend6"
-                android:background="#FFFFFFFF"
-                style="@style/risedview"/>
+                android:background="#FFFFFFFF" />
 
             <TextView
-                android:layout_marginLeft="8dp"
-                android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sensor 6"/>
+                android:layout_marginLeft="8dp"
+                android:text="Sensor 6"
+                android:textSize="16sp" />
         </LinearLayout>
 
 

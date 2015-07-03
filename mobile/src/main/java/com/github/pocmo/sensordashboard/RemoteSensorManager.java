@@ -6,6 +6,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.content.Context;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 import com.github.pocmo.sensordashboard.data.DataRecord;
@@ -180,6 +181,29 @@ public class RemoteSensorManager {
         }
     }
 
+
+    private void setSensorFilter(final boolean filter_switch) {
+        Log.d(TAG, "set filter");
+
+        if (validateConnection()) {
+            PutDataMapRequest dataMap = PutDataMapRequest.create("/filter_switch");
+
+            dataMap.getDataMap().putBoolean(DataMapKeys.FILTER_SWITCH, filter_switch);
+
+
+            PutDataRequest putDataRequest = dataMap.asPutDataRequest();
+            Wearable.DataApi.putDataItem(googleApiClient, putDataRequest).setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
+                @Override
+                public void onResult(DataApi.DataItemResult dataItemResult) {
+                    Log.d(TAG, "set filter " + filter_switch + ": " + dataItemResult.getStatus().isSuccess());
+                }
+            });
+        }
+    }
+
+
+
+
     public void startMeasurement() {
         executorService.submit(new Runnable() {
             @Override
@@ -223,6 +247,7 @@ public class RemoteSensorManager {
     }
 
     public void set_is_recording(boolean input){
+        setSensorFilter(!input);
         is_recording=input;
     }
 }

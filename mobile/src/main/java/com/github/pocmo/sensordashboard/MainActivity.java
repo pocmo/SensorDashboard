@@ -67,6 +67,7 @@ public class MainActivity extends ActionBarActivity {
         });
 
         remoteSensorManager.startMeasurement();
+        Toast.makeText(this, "Measurement Started\n" , Toast.LENGTH_SHORT).show();
     }
 
 
@@ -115,6 +116,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void startRecording(View view) {
+
 
         remoteSensorManager.set_is_recording(true);
     }

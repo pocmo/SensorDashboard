@@ -5,4 +5,5 @@ public class DataMapKeys {
     public static final String TIMESTAMP = "timestamp";
     public static final String VALUES = "values";
     public static final String FILTER = "filter";
+    public static final String FILTER_SWITCH = "filter_switch";
 }

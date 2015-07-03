@@ -42,6 +42,16 @@ public class MessageReceiverService extends WearableListenerService {
                     int filterById = dataMap.getInt(DataMapKeys.FILTER);
                     deviceClient.setSensorFilter(filterById);
                 }
+
+                if (path.startsWith("/filter_switch")) {
+                    DataMap dataMap = DataMapItem.fromDataItem(dataItem).getDataMap();
+                    boolean filter_switch = dataMap.getBoolean(DataMapKeys.FILTER_SWITCH);
+                    deviceClient.set_filter_switch(filter_switch);
+                }
+
+
+
+
             }
         }
     }

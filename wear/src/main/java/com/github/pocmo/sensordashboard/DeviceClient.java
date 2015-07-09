@@ -40,6 +40,8 @@ public class DeviceClient {
     private ExecutorService executorService;
     private int filterId;
 
+    private byte sequenceNum=0;
+
     private SparseLongArray lastSensorData;
 
     private DeviceClient(Context context) {
@@ -100,6 +102,7 @@ public class DeviceClient {
         dataMap.getDataMap().putInt(DataMapKeys.ACCURACY, accuracy);
         dataMap.getDataMap().putLong(DataMapKeys.TIMESTAMP, timestamp);
         dataMap.getDataMap().putFloatArray(DataMapKeys.VALUES, values);
+        dataMap.getDataMap().putByte(DataMapKeys.SEQUENCE_NUMBER, sequenceNum++);
 
         PutDataRequest putDataRequest = dataMap.asPutDataRequest();
         send(putDataRequest);

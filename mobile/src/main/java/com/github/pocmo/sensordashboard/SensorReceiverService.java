@@ -65,7 +65,9 @@ public class SensorReceiverService extends WearableListenerService {
         long timestamp = dataMap.getLong(DataMapKeys.TIMESTAMP);
         float[] values = dataMap.getFloatArray(DataMapKeys.VALUES);
 
-        Log.v(TAG, "Received sensor data " + sensorType + " = " + Arrays.toString(values));
+        byte sequence_num=dataMap.getByte(DataMapKeys.SEQUENCE_NUMBER);
+
+        Log.v(TAG, "Received sensor type " + sensorType + "sequence num: "+Byte.toString(sequence_num));
 
 
 

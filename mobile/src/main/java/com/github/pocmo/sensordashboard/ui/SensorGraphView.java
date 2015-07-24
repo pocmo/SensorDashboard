@@ -23,27 +23,23 @@ public class SensorGraphView extends View {
     private static final int CIRCLE_SIZE_ACCURACY_HIGH = 4;
     private static final int CIRCLE_SIZE_ACCURACY_MEDIUM = 10;
     private static final int CIRCLE_SIZE_ACCURACY_LOW = 20;
-
-
-    private static final int MAX_DATA_SIZE = 300;
     private static final int CIRCLE_SIZE_DEFAULT = 4;
 
-    // FIXME don't hardcode 9
-    private Paint[] rectPaints = new Paint[9];
+    private static final int MAX_DATA_SIZE = 300;
+    private static final int NUM_DRAW_SENSOR = 20;
+    private static final int NUM_RECT_PAINTS = 9; // FIXME don't hardcode 9
 
+    private final Paint[] rectPaints = new Paint[NUM_RECT_PAINTS];
+    private float zeroline = 0;
+    private LinkedList<TagData> tags = new LinkedList<>();
+    private boolean[] drawSensors = new boolean[NUM_DRAW_SENSOR];
     private Paint infoPaint;
     private Paint tagPaint;
-
     private ArrayList<Float>[] normalisedDataPoints;
     private ArrayList<Integer>[] dataPointsAccuracy;
     private ArrayList<Long>[] dataPointsTimeStamps;
-
-    private LinkedList<TagData> tags = new LinkedList<>();
-    private float zeroline = 0;
     private String maxValueLabel = "";
     private String minValueValue = "";
-
-    private boolean[] drawSensors = new boolean[6];
 
     public SensorGraphView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -269,13 +265,20 @@ public class SensorGraphView extends View {
 
                 float y = height - (height * dataPoint);
 
-
                 canvas.drawCircle(currentX, y, dataPointsAccuracy[i].get(index), rectPaints[i]);
 
+                if (i >= rectPaints.length) {
+                    canvas.drawCircle(currentX, y, dataPointsAccuracy[i].get(index), rectPaints[rectPaints.length - 1]);
 
-                if (previousX != -1 && previousY != -1) {
-                    canvas.drawLine(previousX, previousY, currentX, y, rectPaints[i]);
+                    if (previousX != -1 && previousY != -1) {
+                        canvas.drawLine(previousX, previousY, currentX, y, rectPaints[rectPaints.length - 1]);
+                    }
+                } else {
+                    canvas.drawCircle(currentX, y, dataPointsAccuracy[i].get(index), rectPaints[i]);
 
+                    if (previousX != -1 && previousY != -1) {
+                        canvas.drawLine(previousX, previousY, currentX, y, rectPaints[i]);
+                    }
                 }
 
 
@@ -299,14 +302,10 @@ public class SensorGraphView extends View {
                 ++index;
             }
 
-
             firstSensorDrawn = false;
             previousX = -1;
             previousY = -1;
-
-
         }
-
     }
 
     private void drawTag(Canvas canvas, TagData tag, float x) {

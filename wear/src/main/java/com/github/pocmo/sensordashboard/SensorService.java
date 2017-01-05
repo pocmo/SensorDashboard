@@ -151,8 +151,8 @@ public class SensorService extends Service implements SensorEventListener {
             }
 
             if (mHeartrateSensor != null) {
-                final int measurementDuration   = 10;   // Seconds
-                final int measurementBreak      = 5;    // Seconds
+                final int measurementDuration   = 30;   // Seconds
+                final int measurementBreak      = 15;    // Seconds
 
                 mScheduler = Executors.newScheduledThreadPool(1);
                 mScheduler.scheduleAtFixedRate(
@@ -160,7 +160,7 @@ public class SensorService extends Service implements SensorEventListener {
                             @Override
                             public void run() {
                                 Log.d(TAG, "register Heartrate Sensor");
-                                mSensorManager.registerListener(SensorService.this, mHeartrateSensor, SensorManager.SENSOR_DELAY_NORMAL);
+                                mSensorManager.registerListener(SensorService.this, mHeartrateSensor, SensorManager.SENSOR_DELAY_FASTEST);
 
                                 try {
                                     Thread.sleep(measurementDuration * 1000);

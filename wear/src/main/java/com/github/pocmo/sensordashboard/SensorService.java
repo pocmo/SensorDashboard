@@ -10,12 +10,14 @@ import android.hardware.SensorManager;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class SensorService extends Service implements SensorEventListener {
-    private static final String TAG = "SensorDashboard/SensorService";
+    private static final String TAG = "SensorService";
 
     private final static int SENS_ACCELEROMETER = Sensor.TYPE_ACCELEROMETER;
     private final static int SENS_MAGNETIC_FIELD = Sensor.TYPE_MAGNETIC_FIELD;
@@ -77,6 +79,10 @@ public class SensorService extends Service implements SensorEventListener {
 
     protected void startMeasurement() {
         mSensorManager = ((SensorManager) getSystemService(SENSOR_SERVICE));
+
+        if (BuildConfig.DEBUG) {
+            logAvailableSensors();
+        }
 
         Sensor accelerometerSensor = mSensorManager.getDefaultSensor(SENS_ACCELEROMETER);
         Sensor ambientTemperatureSensor = mSensorManager.getDefaultSensor(SENS_AMBIENT_TEMPERATURE);
@@ -264,4 +270,19 @@ public class SensorService extends Service implements SensorEventListener {
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+
+    /**
+     * Log all available sensors to logcat
+     */
+    private void logAvailableSensors() {
+        final List<Sensor> sensors = mSensorManager.getSensorList(Sensor.TYPE_ALL);
+        Log.d(TAG, "=== LIST AVAILABLE SENSORS ===");
+        Log.d(TAG, String.format(Locale.getDefault(), "|%-35s|%-38s|%-6s|", "SensorName", "StringType", "Type"));
+        for (Sensor sensor : sensors) {
+            Log.v(TAG, String.format(Locale.getDefault(), "|%-35s|%-38s|%-6s|", sensor.getName(), sensor.getStringType(), sensor.getType()));
+        }
+
+        Log.d(TAG, "=== LIST AVAILABLE SENSORS ===");
+    }
+
 }
